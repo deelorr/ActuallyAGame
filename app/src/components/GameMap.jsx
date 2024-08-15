@@ -1,6 +1,7 @@
 import Tile from './Tile';
 import OverlayTile from './OverlayTile';
 import Character from './Character/Character';
+import DebugPanel from './DebugPanel';
 
 const GameMap = () => {
   const mapLayout = [
@@ -78,6 +79,7 @@ const GameMap = () => {
 
       {/* Character on top of all layers */}
       <Character />
+      <DebugPanel />
     </div>
   </>
   );

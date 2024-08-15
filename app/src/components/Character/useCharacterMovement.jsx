@@ -1,11 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useContext } from 'react';
+import GameContext from '../../contexts/GameContext'; // Import the GameContext
 
 const TILE_SIZE = 16; // The size of one grid tile, reduced by half
 const MOVE_DELAY = 80; // Match this with the CSS transition duration
 
 const useCharacterMovement = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [direction, setDirection] = useState('down');
+  const { 
+    position, 
+    setPosition,
+    direction,
+    setDirection
+  } = useContext(GameContext);
+  
   const [moving, setMoving] = useState(false);
 
   const handleKeyDown = useCallback(
@@ -42,7 +48,7 @@ const useCharacterMovement = () => {
 
       setTimeout(() => setMoving(false), MOVE_DELAY); // Prevent further movement during the transition
     },
-    [direction, position, moving]
+    [direction, position, moving, setPosition]
   );
 
   useEffect(() => {
