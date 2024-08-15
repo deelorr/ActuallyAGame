@@ -1,6 +1,6 @@
 
 import Tile from './Tile';
-import Character from './Character';
+import Character from './Character/Character';
 
 const GameMap = () => {
   const mapLayout = [
