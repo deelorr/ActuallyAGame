@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 
-const TILE_SIZE = 32; // The size of one grid tile
+const TILE_SIZE = 16; // The size of one grid tile, reduced by half
 const MOVE_DELAY = 80; // Match this with the CSS transition duration
 
 const useCharacterMovement = () => {
@@ -22,7 +22,7 @@ const useCharacterMovement = () => {
           break;
         case 'ArrowDown':
           newDirection = 'down';
-          newPos.y = Math.min(position.y + TILE_SIZE, TILE_SIZE * 9);
+          newPos.y = Math.min(position.y + TILE_SIZE, TILE_SIZE * 18); // Adjusted for smaller tile size
           break;
         case 'ArrowLeft':
           newDirection = 'left';
@@ -30,7 +30,7 @@ const useCharacterMovement = () => {
           break;
         case 'ArrowRight':
           newDirection = 'right';
-          newPos.x = Math.min(position.x + TILE_SIZE, TILE_SIZE * 9);
+          newPos.x = Math.min(position.x + TILE_SIZE, TILE_SIZE * 18); // Adjusted for smaller tile size
           break;
         default:
           return;

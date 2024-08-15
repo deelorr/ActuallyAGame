@@ -4,10 +4,10 @@ import Character from './Character/Character';
 
 const GameMap = () => {
   const mapLayout = [
-    ['grass-d', 'grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-d', 'grass-d', 'dirt-l', 'dirt-l', 'dirt-l'],
-    ['grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'sand', 'sand'],
-    ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand'],
-    ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'water', 'water'],
+    ['grass-d', 'grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
+    ['grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
+    ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
+    ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
     ['grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'water', 'water'],
     ['dirt-l', 'dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'water', 'water'],
     ['dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'sand', 'water', 'water'],
@@ -18,7 +18,7 @@ const GameMap = () => {
 
   const overlayLayout = [
     ['none', 'none', 'none', 'bush', 'tree', 'tree', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'bush', 'bush', 'bush', 'none', 'none', 'none', 'none'],
+    ['none', 'none', 'none', 'bush', 'bush', 'bush', 'none', 'none', 'store', 'none'],
     ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
     ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
     ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
@@ -36,10 +36,10 @@ const GameMap = () => {
     position: 'relative',
     width: '320px', // 10 tiles * 32px
     height: '320px', // 10 tiles * 32px
-    transform : 'scale(2)', // for now fix for size
   };
 
   return (
+    <>
     <div style={gameMapStyle}>
 
       {/* Base Map Layer */}
@@ -79,6 +79,7 @@ const GameMap = () => {
       {/* Character on top of all layers */}
       <Character />
     </div>
+  </>
   );
 };
 

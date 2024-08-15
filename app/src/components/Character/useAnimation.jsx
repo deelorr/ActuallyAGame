@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 const MOVE_SPEED = 8; // Adjust this value to slow down movement
 const WALK_FRAME_COUNT = 9; // Number of frames in the walking animation
 const IDLE_FRAME_COUNT = 8; // Number of frames in the idle animation
+const ATTACK_FRAME_COUNT = 6; // Number of frames in the attack animation
 
 const useAnimation = (moving) => {
   const [step, setStep] = useState(0); // Current animation frame

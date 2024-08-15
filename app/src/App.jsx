@@ -1,9 +1,12 @@
 
+
 import GameMap from './components/GameMap';
 
 function App() {
   return (
+    <>
       <GameMap />
+    </>
   );
 }
 

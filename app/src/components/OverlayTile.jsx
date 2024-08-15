@@ -20,7 +20,7 @@ const OverlayTile = ({ type }) => {
           backgroundPosition: '-1664px -121px',
           width: '32px',
           height: '72px', // Tree height
-          marginTop: '-48px', // Move the tree up by 32px to overlap the tile below
+          marginTop: '-38px', // Move the tree up by 32px to overlap the tile below
           zIndex: 1, // Ensure it's layered above other tiles
         };
       case 'cliff':
@@ -32,11 +32,18 @@ const OverlayTile = ({ type }) => {
         };
       case 'bush':
         return {
-          // backgroundPosition: '-864px -64px',
-          backgroundPosition: animationStep === 0 ? '-864px -64px' : '-896px -64px',
+          backgroundPosition: animationStep === 0 ? '-868px -63px' : '-900px -63px',
           width: '32px',
           height: '32px',
           zIndex: 1,
+        };
+      case 'store':
+        return {
+          backgroundPosition: '-955px -384px',
+          width: '42px', // Double the width of a tile
+          height: '64px', // Double the height of a tile
+          marginTop: '-35px', // Move the store up by 32px to overlap the tile below
+          zIndex: 3, // Ensure it's layered above other tiles
         };
       default:
         return { width: '32px', height: '32px' };
