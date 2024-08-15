@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import CharacterWrapper from './CharacterWrapper';
 import useCharacterMovement from './useCharacterMovement';
 import PropTypes from 'prop-types';
@@ -10,16 +10,18 @@ const TILE_SIZE = 32;
 const ATTACK_FRAME_COUNT = 10; // Number of frames in the attack animation
 const ATTACK_DURATION = 500; // Duration of the attack animation in milliseconds
 
-const Character = ({ overlayLayout }) => {
+const Character = () => {
 
   const { 
     position, 
     direction,
-   } = useContext(GameContext); // Use GameContext to get position
-
-  const { moving } = useCharacterMovement(overlayLayout);
-  const [isAttacking, setIsAttacking] = useState(false);
-  const [attackFrame, setAttackFrame] = useState(0);
+    isAttacking,
+    setIsAttacking,
+    attackFrame,
+    setAttackFrame,
+   } = useContext(GameContext); // Use GameContext to get position and isAttacking
+  
+  const { moving } = useCharacterMovement();
   const attackIntervalRef = useRef(null);
 
   const handleAttack = () => {

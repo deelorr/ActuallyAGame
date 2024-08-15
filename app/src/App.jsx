@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <GameProvider>
-      <GameMap />
+        <GameMap />
       </GameProvider>
     </>
   );
