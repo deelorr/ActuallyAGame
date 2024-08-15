@@ -13,7 +13,7 @@ const TILE_SIZE = 32;
 const Character = () => {
   const { position, direction, moving } = useCharacterMovement();
   const step = useAnimation(moving);
-
+  
   return (
     <CharacterWrapper position={position}>
       <Sprite

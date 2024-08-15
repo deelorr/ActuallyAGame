@@ -20,7 +20,6 @@ const Sprite = ({ step, direction, moving, SPRITE_WIDTH, SPRITE_HEIGHT, TILE_SIZ
     transformOrigin: 'top left',
     marginLeft: `${(TILE_SIZE - SPRITE_WIDTH) / 2}px`, // Center the character horizontally on the tile
     marginTop: `${(TILE_SIZE - SPRITE_HEIGHT) / 2}px`, // Center the character vertically on the tile
-    imageRendering: 'pixelated', // Ensures crisp rendering of pixel art
   };
 
   return <div style={spriteStyle} />;

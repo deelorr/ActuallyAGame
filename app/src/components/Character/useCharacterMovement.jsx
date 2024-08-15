@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 const TILE_SIZE = 32; // The size of one grid tile
 
-const useCharacterMovement = () => {
+const useCharacterMovement = (overlayLayout) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState('down'); // 'up', 'down', 'left', 'right'
   const [moving, setMoving] = useState(false); // Track if the character is moving
@@ -47,13 +47,17 @@ const useCharacterMovement = () => {
           return;
       }
 
+      // Adjust zIndex based on position if needed for correct layering
+      const characterZIndex = newPos.y + TILE_SIZE; // This is a simple method where z-index increases as the character moves downwards.
+
       setDirection(newDirection);
       if (newDirection === direction) {
         setPosition(newPos); // Only update position if the direction hasn't changed
       }
       setMoving(true);
+      return characterZIndex;
     },
-    [direction, position]
+    [direction, position, overlayLayout]
   );
 
   const handleKeyUp = useCallback(() => {
@@ -71,7 +75,7 @@ const useCharacterMovement = () => {
     };
   }, [handleKeyDown, handleKeyUp]);
 
-  return { position, direction, moving };
+  return { position, direction, moving, zIndex: handleKeyDown };
 };
 
 export default useCharacterMovement;
