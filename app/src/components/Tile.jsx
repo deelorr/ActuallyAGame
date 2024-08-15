@@ -4,30 +4,29 @@ const Tile = ({ type }) => {
   const getTileStyle = () => {
     switch (type) {
       case 'grass-d':
-        return { backgroundPosition: '-64px -64px' };
+        return { backgroundPosition: '-32px -32px' };
       case 'grass-l':
-        return { backgroundPosition: '-128px -64px' };
+        return { backgroundPosition: '-64px -32px' };
       case 'dirt-l':
-        return { backgroundPosition: '-192px -64px' };
+        return { backgroundPosition: '-96px -32px' };
       case 'water':
-        return { backgroundPosition: '-256px -64px' };
+        return { backgroundPosition: '-128px -32px' };
       case 'sand':
-        return { backgroundPosition: '-320px -64px' };
+        return { backgroundPosition: '-160px -32px' };
       case 'dirt-d':
-        return { backgroundPosition: '-384px -64px' };
+        return { backgroundPosition: '-192px -32px' };
       default:
-        return { backgroundPosition: '-64px -64px' }; // Default to grass
+        return { backgroundPosition: '-32px -32px' }; // grass-d if nothing else
     }
   };
 
   return (
     <div
-      className='tile'
       style={{
-        width: '64px',
-        height: '64px',
-        backgroundImage: 'url(/src/assets/tileset.png)',
-        backgroundSize: '4096px 4096px', // Adjust the background size accordingly for 64x64 tiles
+        width: '32px',
+        height: '32px',
+        backgroundImage: 'url(/src/assets/tileSet.png)',
+        backgroundSize: '2048px 2048px', // 1024x1024px tileSet * 2 for scaling
         ...getTileStyle(),
       }}
     />

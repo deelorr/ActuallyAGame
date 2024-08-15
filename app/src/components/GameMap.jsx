@@ -1,8 +1,6 @@
-// src/components/GameMap.jsx
 
 import Tile from './Tile';
 import Character from './Character';
-import './GameMap.css';
 
 const GameMap = () => {
   const mapLayout = [
@@ -17,19 +15,22 @@ const GameMap = () => {
     ['dirt-d', 'dirt-d', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'water', 'water', 'water'],
     ['dirt-d', 'dirt-d', 'dirt-d', 'dirt-l', 'sand', 'sand', 'water', 'water', 'water', 'water'],
   ];
-  
-  
+
+  const gameMapStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(10, 32px)',
+    gridTemplateRows: 'repeat(10, 32px)',
+    position: 'relative',
+  };
 
   return (
-    <div className='gameBox'>
-      <div className='gameMap'>
-        {mapLayout.map((row, rowIndex) =>
-          row.map((tile, colIndex) => (
-            <Tile key={`${rowIndex}-${colIndex}`} type={tile} />
-          ))
-        )}
-        <Character />
-      </div>
+    <div style={gameMapStyle}>
+      {mapLayout.map((row, rowIndex) =>
+        row.map((tile, colIndex) => (
+          <Tile key={`${rowIndex}-${colIndex}`} type={tile} />
+        ))
+      )}
+      <Character />
     </div>
   );
 };
