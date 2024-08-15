@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 
 const TILE_SIZE = 32; // The size of one grid tile
-const MOVE_DELAY = 200; // Match this with the CSS transition duration
+const MOVE_DELAY = 80; // Match this with the CSS transition duration
 
 const useCharacterMovement = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });

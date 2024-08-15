@@ -17,8 +17,8 @@ const GameMap = () => {
   ];
 
   const overlayLayout = [
-    ['none', 'none', 'bush', 'bush', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'bush', 'bush', 'none', 'none', 'none', 'none', 'none', 'none'],
+    ['none', 'none', 'none', 'bush', 'tree', 'tree', 'none', 'none', 'none', 'none'],
+    ['none', 'none', 'none', 'bush', 'bush', 'bush', 'none', 'none', 'none', 'none'],
     ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
     ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
     ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
@@ -36,6 +36,7 @@ const GameMap = () => {
     position: 'relative',
     width: '320px', // 10 tiles * 32px
     height: '320px', // 10 tiles * 32px
+    transform : 'scale(2)', // for now fix for size
   };
 
   return (
