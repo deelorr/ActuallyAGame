@@ -1,0 +1,15 @@
+.gameBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+
+.gameMap {
+    display: grid;
+    grid-template-columns: repeat(10, 64px);
+    grid-template-rows: repeat(10, 64px);
+    position: relative;
+}
