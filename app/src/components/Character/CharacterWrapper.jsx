@@ -10,6 +10,7 @@ const CharacterWrapper = ({ position, children }) => {
         position: 'absolute',
         top: `${position.y}px`,
         left: `${position.x}px`,
+        transition: 'top 0.2s ease, left 0.2s ease', // Smooth transition for movement
       }}
     >
       {children}
@@ -22,7 +23,7 @@ CharacterWrapper.propTypes = {
         x: PropTypes.number.isRequired,
         y: PropTypes.number.isRequired,
     }).isRequired,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
     };
 
 export default CharacterWrapper;

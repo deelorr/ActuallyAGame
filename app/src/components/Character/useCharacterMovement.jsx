@@ -1,81 +1,59 @@
-
-import { useState, useEffect, useCallback } from 'react';
-
-// Manages the character's movement and direction state.
+import { useState, useCallback, useEffect } from 'react';
 
 const TILE_SIZE = 32; // The size of one grid tile
+const MOVE_DELAY = 200; // Match this with the CSS transition duration
 
-const useCharacterMovement = (overlayLayout) => {
+const useCharacterMovement = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [direction, setDirection] = useState('down'); // 'up', 'down', 'left', 'right'
-  const [moving, setMoving] = useState(false); // Track if the character is moving
+  const [direction, setDirection] = useState('down');
+  const [moving, setMoving] = useState(false);
 
   const handleKeyDown = useCallback(
     (e) => {
+      if (moving) return; // Prevent new movement until the current one is done
+
       let newDirection = direction;
       let newPos = { ...position };
-
-      const mapWidth = TILE_SIZE * 10; // Assuming your map is 10 tiles wide
-      const mapHeight = TILE_SIZE * 10; // Assuming your map is 10 tiles tall
 
       switch (e.key) {
         case 'ArrowUp':
           newDirection = 'up';
-          newPos.y = Math.max(position.y - TILE_SIZE, 0); // Prevent moving out of bounds at the top
+          newPos.y = Math.max(position.y - TILE_SIZE, 0);
           break;
         case 'ArrowDown':
           newDirection = 'down';
-          newPos.y = Math.min(position.y + TILE_SIZE, mapHeight - TILE_SIZE); // Allow full movement into the last tile
+          newPos.y = Math.min(position.y + TILE_SIZE, TILE_SIZE * 9);
           break;
         case 'ArrowLeft':
           newDirection = 'left';
-          if (direction === 'right') {
-            newPos.x = position.x; // Stay in the same position when flipping
-          } else {
-            newPos.x = Math.max(position.x - TILE_SIZE, 0); // Move left if not flipping
-          }
+          newPos.x = Math.max(position.x - TILE_SIZE, 0);
           break;
         case 'ArrowRight':
           newDirection = 'right';
-          if (direction === 'left') {
-            newPos.x = position.x; // Stay in the same position when flipping
-          } else {
-            newPos.x = Math.min(position.x + TILE_SIZE, mapWidth - TILE_SIZE); // Move right if not flipping
-          }
+          newPos.x = Math.min(position.x + TILE_SIZE, TILE_SIZE * 9);
           break;
         default:
           return;
       }
 
-      // Adjust zIndex based on position if needed for correct layering
-      const characterZIndex = newPos.y + TILE_SIZE; // This is a simple method where z-index increases as the character moves downwards.
-
       setDirection(newDirection);
-      if (newDirection === direction) {
-        setPosition(newPos); // Only update position if the direction hasn't changed
-      }
+      setPosition(newPos);
       setMoving(true);
-      return characterZIndex;
-    },
-    [direction, position, overlayLayout]
-  );
 
-  const handleKeyUp = useCallback(() => {
-    setMoving(false);
-    console.log('Key released, stopping movement');
-  }, []);
+      setTimeout(() => setMoving(false), MOVE_DELAY); // Prevent further movement during the transition
+    },
+    [direction, position, moving]
+  );
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [handleKeyDown, handleKeyUp]);
+  }, [handleKeyDown]);
 
-  return { position, direction, moving, zIndex: handleKeyDown };
+  return { position, direction, moving };
 };
 
 export default useCharacterMovement;
