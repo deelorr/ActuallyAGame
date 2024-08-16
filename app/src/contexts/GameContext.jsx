@@ -7,8 +7,10 @@ const GameProvider = ({ children }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState('down');
   const [moving, setMoving] = useState(false);
+  const [idle, setIdle] = useState(false);
   const [isAttacking, setIsAttacking] = useState(false);
   const [attackFrame, setAttackFrame] = useState(0);
+  const [idleFrame, setIdleFrame] = useState(0);
 
   const value = {
     position,
@@ -21,6 +23,10 @@ const GameProvider = ({ children }) => {
     setIsAttacking,
     attackFrame,
     setAttackFrame,
+    idleFrame,
+    setIdleFrame, 
+    idle,
+    setIdle
   };
 
   return (

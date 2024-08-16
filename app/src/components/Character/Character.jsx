@@ -9,9 +9,10 @@ const SPRITE_HEIGHT = 64;
 const TILE_SIZE = 32;
 const ATTACK_FRAME_COUNT = 10; // Number of frames in the attack animation
 const ATTACK_DURATION = 500; // Duration of the attack animation in milliseconds
+const IDLE_FRAME_COUNT = 9; // Number of frames in the idle animation
+const IDLE_FRAME_DURATION = 100; // Duration of the idle animation in milliseconds
 
 const Character = () => {
-
   const { 
     position, 
     direction,
@@ -19,14 +20,23 @@ const Character = () => {
     setIsAttacking,
     attackFrame,
     setAttackFrame,
-   } = useContext(GameContext); // Use GameContext to get position and isAttacking
+    idleFrame,
+    setIdleFrame,
+    setIdle,
+    moving,
+    setMoving,
+   } = useContext(GameContext); // Use GameContext to get state and actions
+
+   useCharacterMovement(); // Use the custom hook for character movement
   
-  const { moving } = useCharacterMovement();
   const attackIntervalRef = useRef(null);
+  const idleIntervalRef = useRef(null);
 
   const handleAttack = () => {
     if (isAttacking) return; // Prevent re-trigger while already attacking
     setIsAttacking(true);
+    setIdle(false); // Ensure idle is deactivated
+    setMoving(false); // Ensure moving is deactivated
     setAttackFrame(0); // Starts the first attack frame
 
     attackIntervalRef.current = setInterval(() => {
@@ -34,6 +44,7 @@ const Character = () => {
         if (prev === ATTACK_FRAME_COUNT - 1) {
           clearInterval(attackIntervalRef.current);
           setIsAttacking(false); // End the attack after the last frame
+          setIdle(true); // Set to idle after attacking
           return prev;
         }
         return prev + 1; // Move to the next frame
@@ -60,22 +71,24 @@ const Character = () => {
   const getSpriteStyle = () => {
     let spriteStrip;
     let currentFrame = attackFrame;
-
+  
     if (isAttacking) {
       spriteStrip = `/src/assets/character-attack.png`;
-    } else if (moving) {
+    } 
+    else if (moving) {
       spriteStrip = `/src/assets/character-walk.png`;
       currentFrame = attackFrame % ATTACK_FRAME_COUNT; // Loop walking frames
-    } else {
+    } 
+    else {
       spriteStrip = `/src/assets/character-idle.png`;
-      currentFrame = 0; // Default to idle frame 
+      currentFrame = idleFrame; // Use idle frame state
     }
-
+  
     const flip = direction === 'left' ? `translateX(${SPRITE_WIDTH}px) scaleX(-1)` : 'scaleX(1)';
-
+  
     return {
       backgroundImage: `url(${spriteStrip})`,
-      backgroundPosition: `-${currentFrame * SPRITE_WIDTH}px 0px`,
+      backgroundPosition: `-${Math.floor(currentFrame) * SPRITE_WIDTH}px 0px`,
       width: `${SPRITE_WIDTH}px`,
       height: `${SPRITE_HEIGHT}px`,
       transform: flip,
@@ -85,6 +98,26 @@ const Character = () => {
       imageRendering: 'pixelated',
     };
   };
+
+  useEffect(() => {
+    if (!moving && !isAttacking) {
+      setIdle(true); // Character should be idle
+      idleIntervalRef.current = setInterval(() => {
+        setIdleFrame((prev) => (prev + 1) % IDLE_FRAME_COUNT);
+      }, IDLE_FRAME_DURATION);
+    } else {
+      setIdle(false); // Ensure idle is deactivated
+      if (idleIntervalRef.current) {
+        clearInterval(idleIntervalRef.current); // Stop idle animation when not idle
+      }
+    }
+
+    return () => {
+      if (idleIntervalRef.current) {
+        clearInterval(idleIntervalRef.current); // Cleanup on unmount
+      }
+    };
+  }, [moving, isAttacking, setIdleFrame]);
 
   return (
     <CharacterWrapper position={position} zIndex={position.y / TILE_SIZE + 2}>

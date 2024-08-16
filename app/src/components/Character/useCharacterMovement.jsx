@@ -1,22 +1,17 @@
-import { useCallback, useEffect, useContext } from 'react';
-import GameContext from '../../contexts/GameContext'; // Import the GameContext
+import { useContext, useCallback, useEffect } from 'react';
+import GameContext from '../../contexts/GameContext';
 
-const TILE_SIZE = 16; // The size of one grid tile, reduced by half
-const MOVE_DELAY = 80; // Match this with the CSS transition duration
+const TILE_SIZE = 16;
+const MOVE_DELAY = 80;
 
 const useCharacterMovement = () => {
-  const { 
-    position, 
-    setPosition,
-    direction,
-    setDirection,
-    moving,
-    setMoving
-  } = useContext(GameContext);
+  const { position, setPosition, direction, setDirection, moving, setMoving } = useContext(GameContext);
 
   const handleKeyDown = useCallback(
     (e) => {
-      if (moving) return; // Prevent new movement until the current one is done
+      if (moving) return; // Prevent movement if already moving
+
+      console.log('Key pressed:', e.key); // Debugging
 
       let newDirection = direction;
       let newPos = { ...position };
@@ -28,7 +23,7 @@ const useCharacterMovement = () => {
           break;
         case 'ArrowDown':
           newDirection = 'down';
-          newPos.y = Math.min(position.y + TILE_SIZE, TILE_SIZE * 18); // Adjusted for smaller tile size
+          newPos.y = Math.min(position.y + TILE_SIZE, TILE_SIZE * 18);
           break;
         case 'ArrowLeft':
           newDirection = 'left';
@@ -36,17 +31,23 @@ const useCharacterMovement = () => {
           break;
         case 'ArrowRight':
           newDirection = 'right';
-          newPos.x = Math.min(position.x + TILE_SIZE, TILE_SIZE * 18); // Adjusted for smaller tile size
+          newPos.x = Math.min(position.x + TILE_SIZE, TILE_SIZE * 18);
           break;
         default:
           return;
       }
 
+      console.log('New direction:', newDirection);
+      console.log('New position:', newPos);
+
       setDirection(newDirection);
       setPosition(newPos);
       setMoving(true);
 
-      setTimeout(() => setMoving(false), MOVE_DELAY); // Prevent further movement during the transition
+      setTimeout(() => {
+        setMoving(false);
+        console.log('Movement complete');
+      }, MOVE_DELAY);
     },
     [direction, position, moving, setPosition, setDirection, setMoving]
   );

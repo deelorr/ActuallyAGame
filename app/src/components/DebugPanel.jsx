@@ -9,22 +9,30 @@ const DebugPanel = () => {
     direction,
     isAttacking,
     attackFrame,
-    moving
+    moving,
+    idle
    } = useContext(GameContext); // Use GameContext to get position
 
   return (
     <div className="debug-panel">
-      DEBUG
-      <div>
-        X: {position.x}, Y: {position.y}
-        <br></br>
+      <span>DEBUG</span>
+      <div className='debug-item'>
+        Position: X-{position.x}, Y-{position.y}
+      </div>
+      <div className='debug-item'>
         Direction: {direction}
-        <br></br>
-        Attacking: {isAttacking ? 'Yes' : 'No'}
-        <br></br>
+      </div>
+      <div className='debug-item'>
+        Attacking: {isAttacking ? 'yes' : 'no'}
+      </div>
+      <div className='debug-item'>
         Attack Frame: {attackFrame}
-        <br></br>
-        Moving: {moving ? 'Yes' : 'No'}
+      </div>
+      <div className='debug-item'>
+        Moving: {moving ? 'yes' : 'no'}
+      </div>
+      <div className='debug-item'>
+        Idle: {idle ? 'yes' : 'no'}
       </div>
     </div>
   );
