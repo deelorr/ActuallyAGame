@@ -5,18 +5,23 @@ const TILE_SIZE = 16;
 const MOVE_DELAY = 80;
 
 const useCharacterMovement = () => {
-  const { position, setPosition, direction, setDirection, moving, setMoving } = useContext(GameContext);
+  const { 
+    position, 
+    setPosition, 
+    direction, 
+    setDirection, 
+    moving, 
+    setMoving
+  } = useContext(GameContext);
 
-  const handleKeyDown = useCallback(
-    (e) => {
+  const handleKeyDown = useCallback((event) => {
+
       if (moving) return; // Prevent movement if already moving
-
-      console.log('Key pressed:', e.key); // Debugging
 
       let newDirection = direction;
       let newPos = { ...position };
 
-      switch (e.key) {
+      switch (event.key) {
         case 'ArrowUp':
           newDirection = 'up';
           newPos.y = Math.max(position.y - TILE_SIZE, 0);
@@ -37,16 +42,12 @@ const useCharacterMovement = () => {
           return;
       }
 
-      console.log('New direction:', newDirection);
-      console.log('New position:', newPos);
-
       setDirection(newDirection);
       setPosition(newPos);
       setMoving(true);
 
       setTimeout(() => {
         setMoving(false);
-        console.log('Movement complete');
       }, MOVE_DELAY);
     },
     [direction, position, moving, setPosition, setDirection, setMoving]

@@ -1,9 +1,20 @@
+import { useContext } from 'react';
 import Tile from './Tile';
 import OverlayTile from './OverlayTile';
 import Character from './Character/Character';
 import DebugPanel from './DebugPanel';
+import HealthBar from '../components/HealthBar';
+import GameContext from '../contexts/GameContext';
+import StatsPanel from '../components/StatsPanel';
+import Enemy from '../components/Enemy';
+import Battle from '../components/Battle';
+
+
 
 const GameMap = () => {
+
+  const { health, maxHealth } = useContext(GameContext);
+
   const mapLayout = [
     ['grass-d', 'grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
     ['grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
@@ -18,16 +29,16 @@ const GameMap = () => {
   ];
 
   const overlayLayout = [
-    ['none', 'none', 'none', 'bush', 'tree', 'tree', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'bush', 'bush', 'bush', 'none', 'none', 'store', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
-    ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'],
+    [null, null, null, 'bush', 'tree', 'tree', null, null, null, null],
+    [null, null, null, 'bush', 'bush', 'bush', null, null, 'store', null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null],
   ];
 
   const gameMapStyle = {
@@ -73,13 +84,19 @@ const GameMap = () => {
             >
               <OverlayTile type={overlay} />
             </div>
-          ) : 'none'
+          ) : null
         )
       )}
 
       {/* Character on top of all layers */}
       <Character />
+      <Enemy />
+      <Battle />
       <DebugPanel />
+    </div>
+    <div>
+    <HealthBar currentHealth={health} maxHealth={maxHealth} />
+    <StatsPanel />
     </div>
   </>
   );
