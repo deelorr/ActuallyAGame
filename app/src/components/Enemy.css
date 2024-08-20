@@ -15,3 +15,9 @@
     background-color: red;
   }
   
+  .enemy-sprite {
+    width: 32px;
+    height: 32px;
+    background-image: url('/src/assets/enemy-sprite.png'); /* Replace with your enemy sprite */
+    background-size: cover;
+  }

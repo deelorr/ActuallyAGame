@@ -7,7 +7,6 @@ import HealthBar from '../components/HealthBar'; // Import HealthBar component f
 import GameContext from '../contexts/GameContext'; // Import GameContext for accessing game state
 import StatsPanel from '../components/StatsPanel'; // Import StatsPanel component for displaying player's stats
 import Enemy from '../components/Enemy'; // Import Enemy component for rendering the enemy
-import Battle from '../components/Battle'; // Import Battle component for handling combat
 
 const GameMap = () => {
   // Extract health and maxHealth from GameContext
@@ -91,7 +90,6 @@ const GameMap = () => {
         {/* Render the character, enemy, and battle components on top of all layers */}
         <Character />
         <Enemy />
-        <Battle />
 
         {/* Render the debug panel for debugging information */}
         <DebugPanel />

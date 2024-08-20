@@ -7,6 +7,8 @@ const GameContext = createContext();
 
 const GameProvider = ({ children }) => {
 
+    const [tileType, setTileType] = useState('grass'); // The type of tile the player is currently on
+
     // Initialize your state machine here
     const stateMachine = useRef(new StateMachine('idle', {
       idle: { MOVE: 'moving', ATTACK: 'attacking' },
@@ -41,8 +43,10 @@ const GameProvider = ({ children }) => {
   const [enemyPosition, setEnemyPosition] = useState({ x: 100, y: 100 }); // Enemy's position on the map
   const [enemyAttackPower, setEnemyAttackPower] = useState(8); // Enemy's attack power
   const [enemyDirection, setEnemyDirection] = useState('left'); // Enemy's current facing direction
+  const [enemyIsMoving, setEnemyIsMoving] = useState(false); // Whether the enemy is currently moving
   const [enemyIsAttacking, setEnemyIsAttacking] = useState(false); // Whether the enemy is currently attacking
-
+  const [enemyAttackFrame, setEnemyAttackFrame] = useState(0); // Current frame of the enemy's attack animation
+  const [enemyIdleFrame, setEnemyIdleFrame] = useState(0); // Current frame of the enemy's idle animation
   // Combine all state values and setters into a single object to pass through the context
   const value = {
 
@@ -76,6 +80,8 @@ const GameProvider = ({ children }) => {
     level,
     setLevel,
 
+    tileType,
+    setTileType,
     stateMachine: stateMachine.current, // Pass the current state of the state machine
 
     // Enemy-related state and setters
@@ -91,6 +97,12 @@ const GameProvider = ({ children }) => {
     setEnemyDirection,
     enemyIsAttacking,
     setEnemyIsAttacking,
+    enemyIsMoving,
+    setEnemyIsMoving,
+    enemyAttackFrame,
+    setEnemyAttackFrame,
+    enemyIdleFrame,
+    setEnemyIdleFrame,
   };
 
   // Return the context provider with the state values and setters passed down

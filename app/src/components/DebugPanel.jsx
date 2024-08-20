@@ -7,7 +7,8 @@ const DebugPanel = () => {
   const { 
     position, // Character's position on the map
     direction, // Character's current direction (e.g., 'up', 'down', 'left', 'right')
-    stateMachine // The state machine managing the character's state
+    stateMachine, // The state machine managing the character's state
+    tileType, // The type of tile the character is currently on
   } = useContext(GameContext);
 
   // Local state to manage whether debug mode is active
@@ -45,6 +46,9 @@ const DebugPanel = () => {
       </div>
       <div className='debug-item'>
         State: {stateMachine.getState()} {/* Display the current state of the character */}
+      </div>
+      <div className="debug-item">
+        Tile Type: {tileType} {/* Display the current tile type */}
       </div>
     </div>
   ) : null; // If debugMode is false, render nothing (null)
