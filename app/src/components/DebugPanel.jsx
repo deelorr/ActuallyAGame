@@ -1,58 +1,53 @@
-import { useContext, useState, useEffect } from 'react'; // Import necessary hooks
-import GameContext from '../contexts/GameContext'; // Import GameContext
-import './DebugPanel.css';
+import { useContext, useState, useEffect } from 'react'; // Import necessary hooks from React
+import GameContext from '../contexts/GameContext'; // Import GameContext for accessing game state
+import './DebugPanel.css'; // Import the CSS file for styling the DebugPanel
 
 const DebugPanel = () => {
+  // Extract necessary state values from GameContext
   const { 
-    position, 
-    direction,
-    isAttacking,
-    attackFrame,
-    moving,
-    idle
-   } = useContext(GameContext); // Use GameContext to get position
+    position, // Character's position on the map
+    direction, // Character's current direction (e.g., 'up', 'down', 'left', 'right')
+    stateMachine // The state machine managing the character's state
+  } = useContext(GameContext);
 
-  const [debugMode, setDebugMode] = useState(false); // Initialize state for debug mode
+  // Local state to manage whether debug mode is active
+  const [debugMode, setDebugMode] = useState(false);
 
+  // Function to toggle the debug mode on and off
   const toggleDebugMode = () => {
-    setDebugMode((prev) => !prev); // Toggle debug mode on 'd' key press
+    setDebugMode((prev) => !prev); // Toggle debugMode state between true and false
   };
 
+  // Effect to handle keydown event for toggling debug mode
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'd') toggleDebugMode();
+      if (e.key === 'd') toggleDebugMode(); // Toggle debug mode when 'd' key is pressed
     };
 
+    // Add keydown event listener when the component mounts
     window.addEventListener('keydown', handleKeyDown);
 
+    // Cleanup the event listener when the component unmounts
     return () => {
-      window.removeEventListener('keydown', handleKeyDown); // Cleanup listener on unmount
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []); // Empty dependency array means this effect runs once when the component mounts
 
+  // Conditionally render the debug panel only when debugMode is true
   return debugMode ? (
     <div className="debug-panel">
-      <span>DEBUG</span>
+      <span>DEBUG</span> {/* Label indicating debug mode */}
       <div className='debug-item'>
-        Position: X-{position.x}, Y-{position.y}
+        Position: X-{position.x}, Y-{position.y} {/* Display the character's X and Y position */}
       </div>
       <div className='debug-item'>
-        Direction: {direction}
+        Direction: {direction} {/* Display the character's current direction */}
       </div>
       <div className='debug-item'>
-        Attacking: {isAttacking ? 'yes' : 'no'}
-      </div>
-      <div className='debug-item'>
-        Attack Frame: {attackFrame}
-      </div>
-      <div className='debug-item'>
-        Moving: {moving ? 'yes' : 'no'}
-      </div>
-      <div className='debug-item'>
-        Idle: {idle ? 'yes' : 'no'}
+        State: {stateMachine.getState()} {/* Display the current state of the character */}
       </div>
     </div>
-  ) : null;
+  ) : null; // If debugMode is false, render nothing (null)
 };
 
 export default DebugPanel;
