@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import GameContext from '../contexts/GameContext'; // Import GameContext to access the global game state
-import HealthBar from './HealthBar'; // Import HealthBar component for displaying player's health
-import StaminaBar from './StaminaBar'; // Import StaminaBar component for displaying player's stamina
-import ExperienceBar from './ExperienceBar'; // Import ExperienceBar component for displaying player's experience
+import GameContext from '../../contexts/GameContext'; // Import GameContext to access the global game state
+import HealthBar from '../StatBars/HealthBar'; // Import HealthBar component for displaying player's health
+import StaminaBar from '../StatBars/StaminaBar'; // Import StaminaBar component for displaying player's stamina
+import ExperienceBar from '../StatBars/ExperienceBar'; // Import ExperienceBar component for displaying player's experience
 import './StatsPanel.css'; // Import CSS for styling the StatsPanel
 
 const StatsPanel = () => {

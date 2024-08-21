@@ -12,6 +12,8 @@ const useCharacterMovement = () => {
   const { 
     position, // Current position of the character
     setPosition, // Function to update the character's position
+    enemyPosition,
+    setEnemyPosition,
     direction, // Current direction the character is facing
     setDirection, // Function to update the character's direction
     stateMachine, // State machine for character states
@@ -19,44 +21,43 @@ const useCharacterMovement = () => {
 
   // Function to handle keydown events for character movement
   const handleKeyDown = useCallback((event) => {
-    // Prevent movement if the character is already moving
     if (stateMachine.getState() === 'moving') return;
-
-    let newDirection = direction; // Initialize newDirection with the current direction
-    let newPos = { ...position }; // Create a copy of the current position
-
-    // Determine the new direction and position based on the pressed key
+  
+    let newDirection = direction;
+    let newPos = { ...position };
+  
     switch (event.key) {
       case 'ArrowUp':
-        newDirection = 'up'; // Set direction to 'up'
-        newPos.y = Math.max(position.y - tileSize, 0); // Move up by reducing the y-coordinate
+        newDirection = 'up';
+        newPos.y = Math.max(position.y - tileSize, 0);
         break;
       case 'ArrowDown':
-        newDirection = 'down'; // Set direction to 'down'
-        newPos.y = Math.min(mapHeight - tileSize, position.y + tileSize);; // Move down by increasing the y-coordinate
+        newDirection = 'down';
+        newPos.y = Math.min(mapHeight - tileSize, position.y + tileSize);
         break;
       case 'ArrowLeft':
-        newDirection = 'left'; // Set direction to 'left'
-        newPos.x = Math.max(position.x - tileSize, 0); // Move left by reducing the x-coordinate
+        newDirection = 'left';
+        newPos.x = Math.max(position.x - tileSize, 0);
         break;
       case 'ArrowRight':
-        newDirection = 'right'; // Set direction to 'right'
-        newPos.x = Math.min(mapWidth - tileSize, position.x + tileSize); // Move right by increasing the x-coordinate
+        newDirection = 'right';
+        newPos.x = Math.min(mapWidth - tileSize, position.x + tileSize);
         break;
       default:
-        return; // Exit the function if a non-movement key is pressed
+        return;
     }
-
-    // Update the character's direction and position
+  
     setDirection(newDirection);
     setPosition(newPos);
-    stateMachine.transition('MOVE'); // Transition to the 'moving' state
-
-    // After a short delay, transition back to the 'idle' state
+    stateMachine.transition('MOVE');
+  
+    // Move the enemy toward the player;
+  
     setTimeout(() => {
-      stateMachine.transition('STOP'); // Transition back to 'idle' after movement
+      stateMachine.transition('STOP');
     }, MOVE_DELAY);
-  }, [direction, position, stateMachine, setPosition, setDirection]);
+  }, [direction, position, enemyPosition, stateMachine, setPosition, setDirection, setEnemyPosition]);
+  
 
   // Effect to add and clean up the keydown event listener
   useEffect(() => {

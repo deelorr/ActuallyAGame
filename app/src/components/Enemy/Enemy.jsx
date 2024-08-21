@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from 'react';
-import GameContext from '../contexts/GameContext';
-import EnemyWrapper from '../components/Enemy/EnemyWrapper';
+import GameContext from '../../contexts/GameContext';
+import EnemyWrapper from './EnemyWrapper';
 
 const SPRITE_WIDTH = 96;
 const SPRITE_HEIGHT = 64;
@@ -145,6 +145,7 @@ const Enemy = () => {
         height: `${SPRITE_HEIGHT}px`,
         transform: flip,
         transformOrigin: 'top left',
+        border: '1px solid blue', // Add a blue border around the enemy sprite
       };
     };
 

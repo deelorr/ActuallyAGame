@@ -163,6 +163,7 @@ const Character = () => {
       transform: flip,
       transformOrigin: 'top left',
       imageRendering: 'pixelated',
+      border:  '1px solid blue', // Add a blue border around the character sprite
     };
   };
   

@@ -94,7 +94,7 @@ const GameProvider = ({ children }) => {
   // Enemy States
   const [enemyHealth, setEnemyHealth] = useState(50); // Enemy's current health
   const [enemyMaxHealth, setEnemyMaxHealth] = useState(50); // Enemy's maximum health
-  const [enemyPosition, setEnemyPosition] = useState({ x: 100, y: 100 }); // Enemy's position on the map
+  const [enemyPosition, setEnemyPosition] = useState({ x: 128, y: 96 }); // Enemy's position on the map
   const [enemyAttackPower, setEnemyAttackPower] = useState(8); // Enemy's attack power
   const [enemyDirection, setEnemyDirection] = useState("left"); // Enemy's current facing direction
   const [enemyIsMoving, setEnemyIsMoving] = useState(false); // Whether the enemy is currently moving

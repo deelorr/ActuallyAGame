@@ -33,6 +33,7 @@ const Tile = ({ type, updateTileType }) => {
       style={{
         width: '32px', // Width of each tile
         height: '32px', // Height of each tile
+        border: '1px solid black', // Add a black border around each tile
         backgroundImage: 'url(/src/assets/tileSet.png)', // The tile set sprite sheet
         backgroundSize: '2048px 2048px', // Size of the entire sprite sheet (scaled up)
         ...getTileStyle(), // Apply the calculated background position based on the tile type

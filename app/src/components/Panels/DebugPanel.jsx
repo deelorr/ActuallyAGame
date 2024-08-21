@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react'; // Import necessary hooks from React
-import GameContext from '../contexts/GameContext'; // Import GameContext for accessing game state
+import GameContext from '../../contexts/GameContext'; // Import GameContext for accessing game state
 import './DebugPanel.css'; // Import the CSS file for styling the DebugPanel
 
 const DebugPanel = () => {
   // Extract necessary state values from GameContext
   const { 
     position, 
+    enemyPosition,
     direction,
     stateMachine,
     enemyStateMachine, 
@@ -76,6 +77,9 @@ const DebugPanel = () => {
       <span>DEBUG MENU</span> {/* Label indicating debug mode */}
       <div className="debug-item">
         Position: X-{position.x}, Y-{position.y} {/* Display the character's X and Y position */}
+      </div>
+      <div>
+        Enemy Position: X-{enemyPosition.x}, Y-{enemyPosition.y} {/* Display the enemy's X and Y position */}
       </div>
       <div className="debug-item">
         Direction: {direction} {/* Display the character's current direction */}

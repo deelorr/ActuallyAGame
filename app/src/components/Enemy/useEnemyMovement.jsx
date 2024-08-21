@@ -5,28 +5,31 @@ const TILE_SIZE = 32; // Assuming each tile is 32x32 pixels
 const MOVE_DELAY = 1000; // Delay between enemy movements
 
 const useEnemyMovement = () => {
-  const { playerPosition, enemyPosition, setEnemyPosition } = useContext(GameContext);
+  const { position, enemyPosition, setEnemyPosition } = useContext(GameContext);
 
   const moveEnemyTowardPlayer = useCallback(() => {
-    if (!playerPosition || !enemyPosition) return;
+    let newEnemyX = enemyPosition.x;
+    let newEnemyY = enemyPosition.y;
+    const { x: playerX, y: playerY } = position;
+    const { x: enemyX, y: enemyY } = enemyPosition;
   
-    let newEnemyPosition = { ...enemyPosition };
-  
-    if (playerPosition.x > enemyPosition.x) {
-      newEnemyPosition.x += TILE_SIZE;
-    } else if (playerPosition.x < enemyPosition.x) {
-      newEnemyPosition.x -= TILE_SIZE;
+    // Move enemy horizontally toward the player
+    if (enemyX < playerX) {
+      newEnemyX += TILE_SIZE;
+    } else if (enemyX > playerX) {
+      newEnemyX -= TILE_SIZE;
     }
   
-    if (playerPosition.y > enemyPosition.y) {
-      newEnemyPosition.y += TILE_SIZE;
-    } else if (playerPosition.y < enemyPosition.y) {
-      newEnemyPosition.y -= TILE_SIZE;
+    // Move enemy vertically toward the player
+    if (enemyY < playerY) {
+      newEnemyY += TILE_SIZE;
+    } else if (enemyY > playerY) {
+      newEnemyY -= TILE_SIZE;
     }
   
-    console.log('Updated Enemy Position:', newEnemyPosition);
-    setEnemyPosition(newEnemyPosition);
-  }, [playerPosition, enemyPosition, setEnemyPosition]);
+    setEnemyPosition({ x: newEnemyX, y: newEnemyY });
+  }, [enemyPosition, position, setEnemyPosition]);
+  
 
   useEffect(() => {
     const interval = setInterval(() => {

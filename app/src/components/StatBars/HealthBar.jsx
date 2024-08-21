@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'; // Import PropTypes for type-checking
 import './HealthBar.css'; // Import CSS for styling the HealthBar
 import { useContext } from 'react'; // Import useContext hook from React
-import GameContext from '../contexts/GameContext'; // Import GameContext to access the global game state
+import GameContext from '../../contexts/GameContext'; // Import GameContext to access the global game state
 
 const HealthBar = ({ currentHealth, maxHealth }) => {
   // Extract the setHealth function from the GameContext
