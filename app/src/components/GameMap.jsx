@@ -7,6 +7,9 @@ import HealthBar from '../components/HealthBar'; // Import HealthBar component f
 import GameContext from '../contexts/GameContext'; // Import GameContext for accessing game state
 import StatsPanel from '../components/StatsPanel'; // Import StatsPanel component for displaying player's stats
 import Enemy from '../components/Enemy'; // Import Enemy component for rendering the enemy
+import useCharacterMovement from './Character/useCharacterMovement'; // Import useCharacterMovement hook for player movement
+import useEnemyMovement from './Enemy/useEnemyMovement'; // Import useEnemyMovement hook for enemy movement
+
 
 const GameMap = () => {
   // Extract health and maxHealth from GameContext
@@ -49,6 +52,9 @@ const GameMap = () => {
     width: '320px', // Total width of the map (10 tiles * 32px)
     height: '320px', // Total height of the map (10 tiles * 32px)
   };
+
+  useCharacterMovement(); // Handle player movement
+  useEnemyMovement();     // Handle enemy movement
 
   return (
     <>

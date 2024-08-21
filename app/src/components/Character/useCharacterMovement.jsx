@@ -12,6 +12,7 @@ const useCharacterMovement = (stateMachine) => {
     setPosition, // Function to update the character's position
     direction, // Current direction the character is facing
     setDirection, // Function to update the character's direction
+
   } = useContext(GameContext);
 
   // Function to handle keydown events for character movement
