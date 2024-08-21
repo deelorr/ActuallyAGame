@@ -1,12 +1,10 @@
 .stats-panel {
   background-color: #1e1e2f;
   color: #ffffff;
-  padding: 15px;
+  padding: 10px;
+  margin: 10px;
   border-radius: 10px;
   width: 220px;
-  position: fixed;
-  top: 50px;
-  left: 10px;
   z-index: 1000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   font-family: 'Roboto', sans-serif;
@@ -51,4 +49,10 @@
 
 .stats-panel .stats-item:last-child {
   margin-bottom: 0;
+}
+
+#atk {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
 }

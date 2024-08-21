@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from "react"; // Import necessary functions from React
+import { createContext, useState, useMemo, useEffect } from "react"; // Import necessary functions from React
 import PropTypes from "prop-types"; // Import PropTypes for type-checking
 import StateMachine from "../classes/StateMachine"; // Import the StateMachine class from your classes
 
@@ -6,7 +6,18 @@ import StateMachine from "../classes/StateMachine"; // Import the StateMachine c
 const GameContext = createContext();
 
 const GameProvider = ({ children }) => {
-  const [tileType, setTileType] = useState("grass"); // The type of tile the player is currently on
+  
+  const tiles = [
+    ['grass-d', 'grass-l', 'dirt-l'],
+    ['water', 'sand', 'dirt-d'],
+    // Add more rows as needed
+  ];
+
+  const determineTileType = (x, y) => {
+    const tileX = Math.floor(x / 32); // Assuming each tile is 32px wide
+    const tileY = Math.floor(y / 32); // Assuming each tile is 32px high
+    return tiles[tileY]?.[tileX] || 'unknown'; // Return 'unknown' if out of bounds
+  };
 
   // Initialize your state machine here
   const stateMachine = useMemo(
@@ -36,6 +47,32 @@ const GameProvider = ({ children }) => {
     []
   );
 
+  const enemyStateMachine = useMemo(
+    () =>
+      new StateMachine(
+        "idle",
+        {
+          idle: { MOVE: "moving", ATTACK: "attacking" },
+          moving: { STOP: "idle", ATTACK: "attacking" },
+          attacking: { STOP_ATTACK: "idle" },
+        },
+        {
+          idle: {
+            onEnter: () => console.log("Entering idle state"),
+            onExit: () => console.log("Exiting idle state"),
+          },
+          moving: {
+            onEnter: () => console.log("Entering moving state"),
+            onExit: () => console.log("Exiting moving state"),
+          },
+          attacking: {
+            onEnter: () => console.log("Entering attacking state"),
+            onExit: () => console.log("Exiting attacking state"),
+          },
+        }
+      ),
+    []
+  );
   // Player States
   const [position, setPosition] = useState({ x: 0, y: 0 }); // Player's position on the map
   const [direction, setDirection] = useState("down"); // Player's current facing direction
@@ -43,13 +80,16 @@ const GameProvider = ({ children }) => {
   const [idleFrame, setIdleFrame] = useState(0); // Current frame of the idle animation
   const [health, setHealth] = useState(100); // Player's current health
   const [moveFrame, setMoveFrame] = useState(0); // Current frame of the moving animation
-  const maxHealth = 100; // Player's maximum health (constant)
   const [stamina, setStamina] = useState(50); // Player's current stamina
-  const maxStamina = 50; // Player's maximum stamina (constant)
   const [attackPower, setAttackPower] = useState(10); // Player's attack power
   const [defense, setDefense] = useState(5); // Player's defense rating
   const [experience, setExperience] = useState(0); // Player's current experience points
   const [level, setLevel] = useState(1); // Player's current level
+
+  // Player Constants
+  const maxHealth = 100; // Player's maximum health (constant)
+  const maxStamina = 50; // Player's maximum stamina (constant)
+
 
   // Enemy States
   const [enemyHealth, setEnemyHealth] = useState(50); // Enemy's current health
@@ -61,6 +101,17 @@ const GameProvider = ({ children }) => {
   const [enemyIsAttacking, setEnemyIsAttacking] = useState(false); // Whether the enemy is currently attacking
   const [enemyAttackFrame, setEnemyAttackFrame] = useState(0); // Current frame of the enemy's attack animation
   const [enemyIdleFrame, setEnemyIdleFrame] = useState(0); // Current frame of the enemy's idle animation
+
+  // Tile State
+  const [tileType, setTileType] = useState("grass"); // The type of tile the player is currently on
+  const updateTileType = (type) => {
+    setTileType(type);
+  };
+
+  useEffect(() => {
+    const currentTileType = determineTileType(position.x, position.y);
+    setTileType(currentTileType);
+  }, [position]);
 
   // Combine all state values and setters into a single object to pass through the context
   const value = {
@@ -113,7 +164,9 @@ const GameProvider = ({ children }) => {
     // Other state and setters
     tileType,
     setTileType,
+    updateTileType,
     stateMachine, // Pass the current state of the state machine
+    enemyStateMachine, // Pass the current state of the enemy state machine
   };
 
   // Return the context provider with the state values and setters passed down

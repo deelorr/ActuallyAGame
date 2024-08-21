@@ -139,22 +139,22 @@ const Character = () => {
   const getSpriteStyle = () => {
     let spriteStrip;
     let currentFrame;
-
+  
     if (stateMachine.getState() === 'attacking') {
       spriteStrip = `/src/assets/character-attack.png`;
       currentFrame = attackFrame;
     } else if (stateMachine.getState() === 'moving') {
       spriteStrip = `/src/assets/character-walk.png`;
-      currentFrame = moveFrame; // Use moveFrame for moving animation
+      currentFrame = moveFrame;
     } else {
       spriteStrip = `/src/assets/character-idle.png`;
       currentFrame = idleFrame;
     }
-
+  
     const flip = direction === 'left' 
       ? `translateX(${SPRITE_WIDTH}px) scaleX(-1)` 
       : 'scaleX(1)';
-
+  
     return {
       backgroundImage: `url(${spriteStrip})`,
       backgroundPosition: `-${Math.floor(currentFrame) * SPRITE_WIDTH}px 0px`,
@@ -162,15 +162,14 @@ const Character = () => {
       height: `${SPRITE_HEIGHT}px`,
       transform: flip,
       transformOrigin: 'top left',
-      marginLeft: `${(TILE_SIZE - SPRITE_WIDTH) / 2}px`,
-      marginTop: `${(TILE_SIZE - SPRITE_HEIGHT) / 2}px`,
       imageRendering: 'pixelated',
     };
   };
+  
 
   return (
     <CharacterWrapper position={position} zIndex={position.y / TILE_SIZE + 2}>
-      <div style={getSpriteStyle()} />
+      <div style={getSpriteStyle()} className='player-sprite'/>
     </CharacterWrapper>
   );
 };

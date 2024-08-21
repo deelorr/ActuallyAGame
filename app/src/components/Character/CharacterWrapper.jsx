@@ -2,17 +2,25 @@ import PropTypes from 'prop-types';
 
 // The CharacterWrapper component handles the positioning of the character in the game world.
 
+const SPRITE_WIDTH = 96;
+const SPRITE_HEIGHT = 64;
+const TILE_SIZE = 32;
+
 const CharacterWrapper = ({ position, children }) => {
+
+  const centeredX = position.x - (SPRITE_WIDTH - TILE_SIZE) / 2;
+  const centeredY = position.y - (SPRITE_HEIGHT - TILE_SIZE) / 2;
+
   return (
     <div
       style={{
-        position: 'absolute', // Position the character absolutely within the parent container
-        top: `${position.y}px`, // Set the top position based on the character's y-coordinate
-        left: `${position.x}px`, // Set the left position based on the character's x-coordinate
-        transition: 'top 0.2s ease, left 0.2s ease', // Apply a smooth transition effect when the character moves
+        position: 'absolute', 
+        top: `${centeredY}px`, // Adjust the top position to center the sprite
+        left: `${centeredX}px`, // Adjust the left position to center the sprite
+        transition: 'top 0.2s ease, left 0.2s ease',
       }}
     >
-      {children} {/* Render the character or other child elements within this wrapper */}
+      {children}
     </div>
   );
 };

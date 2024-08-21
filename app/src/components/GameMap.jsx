@@ -7,8 +7,11 @@ import Enemy from '../components/Enemy'; // Import Enemy component for rendering
 import useCharacterMovement from './Character/useCharacterMovement'; // Import useCharacterMovement hook for player movement
 import useEnemyMovement from './Enemy/useEnemyMovement'; // Import useEnemyMovement hook for enemy movement
 import './GameMap.css'; // Import CSS file for styling the game map
+import { useContext } from 'react';
+import GameContext from '../contexts/GameContext';
 
 const GameMap = () => {
+  const { position, updateTileType } = useContext(GameContext); // Access position and updateTileType from GameContext
 
   // Define the base map layout with different types of tiles
   const mapLayout = [
@@ -51,52 +54,61 @@ const GameMap = () => {
   useCharacterMovement(); // Handle player movement
   useEnemyMovement();     // Handle enemy movement
 
+  // Function to check if the character is on the current tile
+  const isCharacterOnTile = (rowIndex, colIndex) => {
+    const tileX = colIndex * 32;
+    const tileY = rowIndex * 32;
+    return position.x === tileX && position.y === tileY;
+  };
+
   return (
     <>
-    <div className='gameBox'>
-      <div style={gameMapStyle}>
-        {/* Render the base map layer */}
-        {mapLayout.map((row, rowIndex) =>
-          row.map((tile, colIndex) => (
-            <div
-              key={`base-${rowIndex}-${colIndex}`} // Unique key for each tile
-              style={{
-                gridRow: rowIndex + 1, // Set the row position in the grid
-                gridColumn: colIndex + 1, // Set the column position in the grid
-              }}
-            >
-              <Tile type={tile} /> {/* Render the tile component with the specified type */}
-            </div>
-          ))
-        )}
-
-        {/* Render the overlay layer (e.g., bushes, trees) */}
-        {overlayLayout.map((row, rowIndex) =>
-          row.map((overlay, colIndex) =>
-            overlay ? (
+      <div className='statsPanel'>
+        <StatsPanel /> {/* Display the player's stats */}
+      </div>
+      <div className='gameBox'>
+        <div style={gameMapStyle}>
+          {/* Render the base map layer */}
+          {mapLayout.map((row, rowIndex) =>
+            row.map((tile, colIndex) => (
               <div
-                key={`overlay-${rowIndex}-${colIndex}`} // Unique key for each overlay item
+                key={`base-${rowIndex}-${colIndex}`} // Unique key for each tile
                 style={{
                   gridRow: rowIndex + 1, // Set the row position in the grid
                   gridColumn: colIndex + 1, // Set the column position in the grid
-                  zIndex: 2, // Set z-index to ensure overlay appears above base tiles
-                  position: 'relative', // Ensure positioned within the grid
                 }}
               >
-                <OverlayTile type={overlay} /> {/* Render the overlay component with the specified type */}
+                <Tile 
+                  type={tile} 
+                  updateTileType={isCharacterOnTile(rowIndex, colIndex) ? updateTileType : () => {}} 
+                /> {/* Render the tile component with the specified type */}
               </div>
-            ) : null
-          )
-        )}
+            ))
+          )}
 
-        {/* Render the character and the enemy components on top of all layers */}
-        <Character />
-        <Enemy />
-
-        <DebugPanel /> {/* Render the debug panel for debugging information */}
-        <StatsPanel /> {/* Display the player's stats */}
+          {/* Render the overlay layer (e.g., bushes, trees) */}
+          {overlayLayout.map((row, rowIndex) =>
+            row.map((overlay, colIndex) =>
+              overlay ? (
+                <div
+                  key={`overlay-${rowIndex}-${colIndex}`} // Unique key for each overlay item
+                  style={{
+                    gridRow: rowIndex + 1, // Set the row position in the grid
+                    gridColumn: colIndex + 1, // Set the column position in the grid
+                    zIndex: 2, // Set z-index to ensure overlay appears above base tiles
+                    position: 'relative', // Ensure positioned within the grid
+                  }}
+                >
+                  <OverlayTile type={overlay} /> {/* Render the overlay component with the specified type */}
+                </div>
+              ) : null
+            )
+          )}
+          <Character />
+          <Enemy />
+        </div>
       </div>
-      </div>
+      <DebugPanel /> {/* Render the debug panel for debugging information */}
     </>
   );
 };

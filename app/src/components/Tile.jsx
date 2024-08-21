@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'; // Import PropTypes for type-checking
+import { useEffect } from 'react';
 
-const Tile = ({ type }) => {
+const Tile = ({ type, updateTileType }) => {
   // Function to determine the CSS styles based on the tile type
   const getTileStyle = () => {
     switch (type) {
@@ -21,8 +22,14 @@ const Tile = ({ type }) => {
     }
   };
 
+  // Update the tile type in context when this tile is rendered
+  useEffect(() => {
+    updateTileType(type);
+  }, [type, updateTileType]);
+
   return (
-    <div
+    <div 
+      className={type}
       style={{
         width: '32px', // Width of each tile
         height: '32px', // Height of each tile
@@ -37,6 +44,7 @@ const Tile = ({ type }) => {
 // Define the expected prop types for the Tile component
 Tile.propTypes = {
   type: PropTypes.string.isRequired, // The type of tile (required)
+  updateTileType: PropTypes.func.isRequired, // Function to update the tile type in context (required)
 };
 
 export default Tile;
