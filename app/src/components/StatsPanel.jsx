@@ -1,6 +1,7 @@
 import { useContext } from 'react'; // Import useContext hook from React
 import GameContext from '../contexts/GameContext'; // Import GameContext to access the global game state
 import './StatsPanel.css'; // Import CSS for styling the StatsPanel
+import HealthBar from './HealthBar'; // Import HealthBar component for displaying player's health
 
 const StatsPanel = () => {
   // Extract player stats from GameContext
@@ -17,7 +18,8 @@ const StatsPanel = () => {
 
       {/* Display player's health and max health */}
       <div className="stats-item">
-        <span>Health:</span> {health} / {maxHealth}
+        <span>Health:</span>
+        <HealthBar currentHealth={health} maxHealth={maxHealth} /> {/* Display the player's health */}
       </div>
 
       {/* Display player's stamina and max stamina */}
@@ -40,6 +42,7 @@ const StatsPanel = () => {
         <span>Experience:</span> {experience}
       </div>
     </div>
+
   );
 };
 

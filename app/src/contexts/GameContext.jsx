@@ -1,6 +1,6 @@
-import { createContext, useState, useRef } from "react"; // Import necessary functions from React
+import { createContext, useState, useMemo } from "react"; // Import necessary functions from React
 import PropTypes from "prop-types"; // Import PropTypes for type-checking
-import StateMachine from "../classes/StateMachine"; // Import the StateMachine class from the 'javascript-state-machine' library
+import StateMachine from "../classes/StateMachine"; // Import the StateMachine class from your classes
 
 // Create a context for the game state
 const GameContext = createContext();
@@ -9,29 +9,31 @@ const GameProvider = ({ children }) => {
   const [tileType, setTileType] = useState("grass"); // The type of tile the player is currently on
 
   // Initialize your state machine here
-  const stateMachine = useRef(
-    new StateMachine(
-      "idle",
-      {
-        idle: { MOVE: "moving", ATTACK: "attacking" },
-        moving: { STOP: "idle", ATTACK: "attacking" },
-        attacking: { STOP_ATTACK: "idle" },
-      },
-      {
-        idle: {
-          onEnter: () => console.log("Entering idle state"),
-          onExit: () => console.log("Exiting idle state"),
+  const stateMachine = useMemo(
+    () =>
+      new StateMachine(
+        "idle",
+        {
+          idle: { MOVE: "moving", ATTACK: "attacking" },
+          moving: { STOP: "idle", ATTACK: "attacking" },
+          attacking: { STOP_ATTACK: "idle" },
         },
-        moving: {
-          onEnter: () => console.log("Entering moving state"),
-          onExit: () => console.log("Exiting moving state"),
-        },
-        attacking: {
-          onEnter: () => console.log("Entering attacking state"),
-          onExit: () => console.log("Exiting attacking state"),
-        },
-      }
-    )
+        {
+          idle: {
+            onEnter: () => console.log("Entering idle state"),
+            onExit: () => console.log("Exiting idle state"),
+          },
+          moving: {
+            onEnter: () => console.log("Entering moving state"),
+            onExit: () => console.log("Exiting moving state"),
+          },
+          attacking: {
+            onEnter: () => console.log("Entering attacking state"),
+            onExit: () => console.log("Exiting attacking state"),
+          },
+        }
+      ),
+    []
   );
 
   // Player States
@@ -40,6 +42,7 @@ const GameProvider = ({ children }) => {
   const [attackFrame, setAttackFrame] = useState(0); // Current frame of the attack animation
   const [idleFrame, setIdleFrame] = useState(0); // Current frame of the idle animation
   const [health, setHealth] = useState(100); // Player's current health
+  const [moveFrame, setMoveFrame] = useState(0); // Current frame of the moving animation
   const maxHealth = 100; // Player's maximum health (constant)
   const [stamina, setStamina] = useState(50); // Player's current stamina
   const maxStamina = 50; // Player's maximum stamina (constant)
@@ -70,6 +73,8 @@ const GameProvider = ({ children }) => {
     setAttackFrame,
     idleFrame,
     setIdleFrame,
+    moveFrame,
+    setMoveFrame,
     health,
     setHealth,
     maxHealth,
@@ -108,8 +113,7 @@ const GameProvider = ({ children }) => {
     // Other state and setters
     tileType,
     setTileType,
-    stateMachine: stateMachine.current, // Pass the current state of the state machine
-  
+    stateMachine, // Pass the current state of the state machine
   };
 
   // Return the context provider with the state values and setters passed down

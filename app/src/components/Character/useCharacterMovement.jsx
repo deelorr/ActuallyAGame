@@ -5,14 +5,14 @@ const TILE_SIZE = 16; // Size of each tile in the game grid
 const MOVE_DELAY = 80; // Delay between movements in milliseconds
 
 // Custom hook for handling character movement
-const useCharacterMovement = (stateMachine) => {
+const useCharacterMovement = () => {
   // Extracting state and actions from the GameContext
   const { 
     position, // Current position of the character
     setPosition, // Function to update the character's position
     direction, // Current direction the character is facing
     setDirection, // Function to update the character's direction
-
+    stateMachine, // State machine for character states
   } = useContext(GameContext);
 
   // Function to handle keydown events for character movement

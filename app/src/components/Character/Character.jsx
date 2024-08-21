@@ -1,9 +1,6 @@
 import { useContext, useEffect, useRef } from 'react';
 import CharacterWrapper from './CharacterWrapper';
-import useCharacterMovement from './useCharacterMovement';
-import PropTypes from 'prop-types';
 import GameContext from '../../contexts/GameContext';
-import StateMachine from '../../classes/StateMachine';
 
 const SPRITE_WIDTH = 96;
 const SPRITE_HEIGHT = 64;
@@ -11,7 +8,9 @@ const TILE_SIZE = 32;
 const ATTACK_FRAME_COUNT = 10;
 const ATTACK_DURATION = 500;
 const IDLE_FRAME_COUNT = 9;
-const IDLE_FRAME_DURATION = 100;
+const IDLE_FRAME_DURATION = 70;
+const MOVE_FRAME_COUNT = 8;
+const MOVE_FRAME_DURATION = 20;
 
 const Character = () => {
   const { 
@@ -21,70 +20,26 @@ const Character = () => {
     setAttackFrame,
     idleFrame,
     setIdleFrame,
+    moveFrame,
+    setMoveFrame,
+    stateMachine,
   } = useContext(GameContext);
 
   const attackIntervalRef = useRef(null);
   const idleIntervalRef = useRef(null);
-
-  const states = {
-    idle: {
-      MOVE: 'moving',
-      ATTACK: 'attacking',
-    },
-    moving: {
-      STOP: 'idle',
-      ATTACK: 'attacking',
-    },
-    attacking: {
-      STOP_ATTACK: 'idle',
-    },
-  };
-
-  const actions = {
-    idle: {
-      onEnter: () => {
-        idleIntervalRef.current = setInterval(() => {
-          setIdleFrame((prev) => (prev + 1) % IDLE_FRAME_COUNT);
-        }, IDLE_FRAME_DURATION);
-      },
-      onExit: () => {
-        if (idleIntervalRef.current) {
-          clearInterval(idleIntervalRef.current);
-        }
-      },
-    },
-    moving: {
-      onEnter: () => {
-        // Handle entering the moving state
-      },
-      onExit: () => {
-        // Handle exiting the moving state
-      },
-    },
-    attacking: {
-      onEnter: () => handleAttack(),
-      onExit: () => {
-        if (attackIntervalRef.current) {
-          clearInterval(attackIntervalRef.current);
-        }
-      },
-    },
-  };
-
-  const stateMachine = useRef(new StateMachine('idle', states, actions)).current;
-
-  useEffect(() => {
-    stateMachine.transition('MOVE');
-    stateMachine.transition('STOP');
-  }, [stateMachine]);
+  const moveIntervalRef = useRef(null);
 
   const handleAttack = () => {
     setAttackFrame(0);
-
+    if (attackIntervalRef.current) {
+      clearInterval(attackIntervalRef.current);
+      setAttackFrame(0); // Reset to 0 when clearing the interval
+    }
     attackIntervalRef.current = setInterval(() => {
       setAttackFrame((prev) => {
         if (prev === ATTACK_FRAME_COUNT - 1) {
           clearInterval(attackIntervalRef.current);
+          setAttackFrame(0); // Reset to 0 when the animation completes
           stateMachine.transition('STOP_ATTACK');
           return prev;
         }
@@ -92,8 +47,49 @@ const Character = () => {
       });
     }, ATTACK_DURATION / ATTACK_FRAME_COUNT);
   };
+  
 
-  useCharacterMovement(stateMachine);
+  const handleIdle = () => {
+    if (idleIntervalRef.current) {
+      clearInterval(idleIntervalRef.current);
+      setIdleFrame(0); // Reset to 0 when clearing the interval
+    }
+    idleIntervalRef.current = setInterval(() => {
+      setIdleFrame((prev) => (prev + 1) % IDLE_FRAME_COUNT);
+    }, IDLE_FRAME_DURATION);
+  };
+  
+
+  const handleMove = () => {
+    if (moveIntervalRef.current) {
+      clearInterval(moveIntervalRef.current);
+      setMoveFrame(0); // Reset to 0 when clearing the interval
+    }
+    moveIntervalRef.current = setInterval(() => {
+      setMoveFrame((prev) => (prev + 1) % MOVE_FRAME_COUNT);
+    }, MOVE_FRAME_DURATION);
+  };
+  
+
+  useEffect(() => {
+    // Initialize the idle state animation when the component mounts
+    if (stateMachine.getState() === 'idle') {
+      handleIdle();
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (attackIntervalRef.current) {
+        clearInterval(attackIntervalRef.current);
+      }
+      if (idleIntervalRef.current) {
+        clearInterval(idleIntervalRef.current);
+      }
+      if (moveIntervalRef.current) {
+        clearInterval(moveIntervalRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -105,21 +101,51 @@ const Character = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      if (attackIntervalRef.current) {
-        clearInterval(attackIntervalRef.current);
-      }
     };
   }, [stateMachine]);
 
+  useEffect(() => {
+    const currentState = stateMachine.getState();
+  
+    if (currentState === 'idle') {
+      handleIdle();
+    } else if (currentState === 'attacking') {
+      handleAttack();
+    } else if (currentState === 'moving') {
+      handleMove();
+      if (idleIntervalRef.current) {
+        clearInterval(idleIntervalRef.current);
+        setIdleFrame(0); // Reset idle frame when exiting idle state
+      }
+    }
+  
+    return () => {
+      if (currentState === 'attacking' && attackIntervalRef.current) {
+        clearInterval(attackIntervalRef.current);
+        setAttackFrame(0); // Reset attack frame when exiting attack state
+      }
+      if (currentState === 'idle' && idleIntervalRef.current) {
+        clearInterval(idleIntervalRef.current);
+        setIdleFrame(0); // Reset idle frame when exiting idle state
+      }
+      if (currentState === 'moving' && moveIntervalRef.current) {
+        clearInterval(moveIntervalRef.current);
+        setMoveFrame(0); // Reset move frame when exiting move state
+      }
+    };
+  }, [stateMachine.getState()]);
+  
+
   const getSpriteStyle = () => {
     let spriteStrip;
-    let currentFrame = attackFrame;
+    let currentFrame;
 
     if (stateMachine.getState() === 'attacking') {
       spriteStrip = `/src/assets/character-attack.png`;
+      currentFrame = attackFrame;
     } else if (stateMachine.getState() === 'moving') {
       spriteStrip = `/src/assets/character-walk.png`;
-      currentFrame = attackFrame % ATTACK_FRAME_COUNT;
+      currentFrame = moveFrame; // Use moveFrame for moving animation
     } else {
       spriteStrip = `/src/assets/character-idle.png`;
       currentFrame = idleFrame;
@@ -147,10 +173,6 @@ const Character = () => {
       <div style={getSpriteStyle()} />
     </CharacterWrapper>
   );
-};
-
-Character.propTypes = {
-  overlayLayout: PropTypes.array,
 };
 
 export default Character;

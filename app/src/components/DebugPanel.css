@@ -5,17 +5,54 @@
   position: fixed;
   top: 0;
   right: 0;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 5px;
-  border-radius: 5px;
-  margin: 5px;
+  background-color: #1e1e2f;
+  color: #ffffff;
+  border: 1px solid #3c3c4e;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px;
   z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
 }
 
 .debug-item {
-  margin: 5px;
-  border: 1px solid #ccc;
+  background-color: #2a2a3e;
+  margin: 5px 0;
+  border: 1px solid #3c3c4e;
   border-radius: 5px;
-  padding: 5px;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.debug-item:hover {
+  background-color: #3b3b53;
+  transform: translateY(-2px);
+}
+
+.debug-item span {
+  font-weight: bold;
+  color: #76c7c0;
+}
+
+.debug-panel span {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: #76c7c0;
+}
+
+.debug-panel .debug-item:last-child {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+}
+
+.debug-panel .debug-item:last-child span {
+  color: #888;
 }

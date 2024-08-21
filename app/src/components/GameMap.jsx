@@ -1,19 +1,14 @@
-import { useContext } from 'react'; // Import useContext hook from React
 import Tile from './Tile'; // Import Tile component for rendering the map tiles
 import OverlayTile from './OverlayTile'; // Import OverlayTile component for rendering overlay items
 import Character from './Character/Character'; // Import Character component for rendering the player character
 import DebugPanel from './DebugPanel'; // Import DebugPanel component for debugging
-import HealthBar from '../components/HealthBar'; // Import HealthBar component for displaying player's health
-import GameContext from '../contexts/GameContext'; // Import GameContext for accessing game state
 import StatsPanel from '../components/StatsPanel'; // Import StatsPanel component for displaying player's stats
 import Enemy from '../components/Enemy'; // Import Enemy component for rendering the enemy
 import useCharacterMovement from './Character/useCharacterMovement'; // Import useCharacterMovement hook for player movement
 import useEnemyMovement from './Enemy/useEnemyMovement'; // Import useEnemyMovement hook for enemy movement
-
+import './GameMap.css'; // Import CSS file for styling the game map
 
 const GameMap = () => {
-  // Extract health and maxHealth from GameContext
-  const { health, maxHealth } = useContext(GameContext);
 
   // Define the base map layout with different types of tiles
   const mapLayout = [
@@ -58,6 +53,7 @@ const GameMap = () => {
 
   return (
     <>
+    <div className='gameBox'>
       <div style={gameMapStyle}>
         {/* Render the base map layer */}
         {mapLayout.map((row, rowIndex) =>
@@ -93,18 +89,13 @@ const GameMap = () => {
           )
         )}
 
-        {/* Render the character, enemy, and battle components on top of all layers */}
+        {/* Render the character and the enemy components on top of all layers */}
         <Character />
         <Enemy />
 
-        {/* Render the debug panel for debugging information */}
-        <DebugPanel />
-      </div>
-
-      {/* Render the health bar and stats panel below the game map */}
-      <div>
-        <HealthBar currentHealth={health} maxHealth={maxHealth} /> {/* Display the player's health */}
+        <DebugPanel /> {/* Render the debug panel for debugging information */}
         <StatsPanel /> {/* Display the player's stats */}
+      </div>
       </div>
     </>
   );

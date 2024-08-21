@@ -9,10 +9,13 @@ const DebugPanel = () => {
     direction, // Character's current direction (e.g., 'up', 'down', 'left', 'right')
     stateMachine, // The state machine managing the character's state
     tileType, // The type of tile the character is currently on
+    attackFrame, // The current frame of the attack animation
+    idleFrame, // The current frame of the idle animation
+    moveFrame, // The current frame of the moving animation
   } = useContext(GameContext);
 
   // Local state to manage whether debug mode is active
-  const [debugMode, setDebugMode] = useState(false);
+  const [debugMode, setDebugMode] = useState(true);
 
   // Function to toggle the debug mode on and off
   const toggleDebugMode = () => {
@@ -37,7 +40,7 @@ const DebugPanel = () => {
   // Conditionally render the debug panel only when debugMode is true
   return debugMode ? (
     <div className="debug-panel">
-      <span>DEBUG</span> {/* Label indicating debug mode */}
+      <span>DEBUG MENU</span> {/* Label indicating debug mode */}
       <div className='debug-item'>
         Position: X-{position.x}, Y-{position.y} {/* Display the character's X and Y position */}
       </div>
@@ -50,8 +53,13 @@ const DebugPanel = () => {
       <div className="debug-item">
         Tile Type: {tileType} {/* Display the current tile type */}
       </div>
+      <div>
+        Attack: {attackFrame} Idle: {idleFrame} Move: {moveFrame} {/* Display animation frames */}
+      </div>
     </div>
-  ) : null; // If debugMode is false, render nothing (null)
+  ) : <div className="debug-panel">
+        <span className='debug-item'>Press d for debug menu</span>
+      </div>; // If debugMode is false, render this message
 };
 
 export default DebugPanel;

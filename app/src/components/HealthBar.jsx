@@ -17,7 +17,9 @@ const HealthBar = ({ currentHealth, maxHealth }) => {
         className="health-bar"
         style={{ width: `${healthPercentage}%` }}
       ></div>
-      
+      <div className='health-bar-text'>
+      {currentHealth} / {maxHealth}
+      </div>
       {/* Button to simulate taking damage, reducing health by 10 points */}
       <button onClick={() => setHealth((prev) => Math.max(prev - 10, 0))}>
         Take Damage
