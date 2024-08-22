@@ -8,7 +8,7 @@ const DebugPanel = () => {
     position, 
     enemyPosition,
     direction,
-    stateMachine,
+    playerStateMachine,
     enemyStateMachine, 
     tileType, 
     attackFrame, 
@@ -85,7 +85,7 @@ const DebugPanel = () => {
         Direction: {direction} {/* Display the character's current direction */}
       </div>
       <div className="debug-item">
-        State: {stateMachine.getState()} {/* Display the current state of the character */}
+        State: {playerStateMachine.getState()} {/* Display the current state of the character */}
       </div>
       <div className='debug-item'>
         Enemy State: {enemyStateMachine.getState()} {/* Display the current state of the enemy */}

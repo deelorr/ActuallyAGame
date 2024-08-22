@@ -1,31 +1,27 @@
 import { useContext, useCallback, useEffect } from 'react';
 import GameContext from '../../contexts/GameContext';
 
-const tileSize = 32; // Size of each tile in the game grid
-const mapHeight = tileSize * 10; // Height of the game map in pixels
-const mapWidth = tileSize * 10; // Width of the game map in pixels
-const MOVE_DELAY = 80; // Delay between movements in milliseconds
+const tileSize = 32;
+const mapHeight = tileSize * 10;
+const mapWidth = tileSize * 10;
+const MOVE_DELAY = 80;
 
-// Custom hook for handling character movement
 const useCharacterMovement = () => {
-  // Extracting state and actions from the GameContext
+
   const { 
-    position, // Current position of the character
-    setPosition, // Function to update the character's position
-    enemyPosition,
-    setEnemyPosition,
-    direction, // Current direction the character is facing
-    setDirection, // Function to update the character's direction
-    stateMachine, // State machine for character states
+    position, 
+    setPosition, 
+    direction, 
+    setDirection, 
+    playerStateMachine 
   } = useContext(GameContext);
 
-  // Function to handle keydown events for character movement
   const handleKeyDown = useCallback((event) => {
-    if (stateMachine.getState() === 'moving') return;
-  
+ 
+
     let newDirection = direction;
     let newPos = { ...position };
-  
+
     switch (event.key) {
       case 'ArrowUp':
         newDirection = 'up';
@@ -43,32 +39,31 @@ const useCharacterMovement = () => {
         newDirection = 'right';
         newPos.x = Math.min(mapWidth - tileSize, position.x + tileSize);
         break;
+      case ' ':
+        playerStateMachine.transition('ATTACK');
+        playerStateMachine.transition('STOP_ATTACK');
+        return;
       default:
         return;
     }
-  
+
     setDirection(newDirection);
     setPosition(newPos);
-    stateMachine.transition('MOVE');
-  
-    // Move the enemy toward the player;
-  
-    setTimeout(() => {
-      stateMachine.transition('STOP');
-    }, MOVE_DELAY);
-  }, [direction, position, enemyPosition, stateMachine, setPosition, setDirection, setEnemyPosition]);
-  
+    playerStateMachine.transition('MOVE');
 
-  // Effect to add and clean up the keydown event listener
+    setTimeout(() => {
+      playerStateMachine.transition('STOP');
+    }, MOVE_DELAY);
+  }, [direction, position, playerStateMachine, setPosition, setDirection]);
+
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown); // Listen for keydown events
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown); // Remove the event listener on cleanup
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
 
-  // Return the current position and direction from the hook
   return { position, direction };
 };
 

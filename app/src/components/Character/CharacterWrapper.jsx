@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 // The CharacterWrapper component handles the positioning of the character in the game world.
 const CharacterWrapper = ({ position, children }) => {
-
   const centeredX = position.x - 24;
   const centeredY = position.y - 7;
 
@@ -10,10 +9,10 @@ const CharacterWrapper = ({ position, children }) => {
     <div
       style={{
         position: 'absolute', 
-        top: `${centeredY}px`, // Adjust the top position to center the sprite
-        left: `${centeredX}px`, // Adjust the left position to center the sprite
+        top: `${centeredY}px`, 
+        left: `${centeredX}px`,
         transition: 'top 0.2s ease, left 0.2s ease',
-        border: '1px solid red', // Add a red border around the character wrapper
+        border: '1px solid red', 
       }}
     >
       {children}
@@ -24,10 +23,10 @@ const CharacterWrapper = ({ position, children }) => {
 // Define prop types for the CharacterWrapper component to ensure correct usage
 CharacterWrapper.propTypes = {
   position: PropTypes.shape({
-    x: PropTypes.number.isRequired, // x-coordinate of the character's position (required)
-    y: PropTypes.number.isRequired, // y-coordinate of the character's position (required)
+    x: PropTypes.number.isRequired, 
+    y: PropTypes.number.isRequired, 
   }).isRequired,
-  children: PropTypes.node.isRequired, // The children to be rendered inside the wrapper (required)
+  children: PropTypes.node.isRequired, 
 };
 
 export default CharacterWrapper;
