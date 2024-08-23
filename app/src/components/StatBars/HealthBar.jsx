@@ -3,6 +3,7 @@ import './HealthBar.css'; // Import CSS for styling the HealthBar
 import { useContext } from 'react'; // Import useContext hook from React
 import GameContext from '../../contexts/GameContext'; // Import GameContext to access the global game state
 
+// HealthBar component displays the player's current health and provides an option to simulate damage
 const HealthBar = ({ currentHealth, maxHealth }) => {
   // Extract the setHealth function from the GameContext
   const { setHealth } = useContext(GameContext);
@@ -17,8 +18,9 @@ const HealthBar = ({ currentHealth, maxHealth }) => {
         className="health-bar"
         style={{ width: `${healthPercentage}%` }}
       ></div>
+      {/* Display the current health out of the maximum health */}
       <div className='health-bar-text'>
-      {currentHealth} / {maxHealth}
+        {currentHealth} / {maxHealth}
       </div>
       {/* Button to simulate taking damage, reducing health by 10 points */}
       <button onClick={() => setHealth((prev) => Math.max(prev - 10, 0))}>
@@ -34,4 +36,4 @@ HealthBar.propTypes = {
   maxHealth: PropTypes.number.isRequired, // The maximum health value (required)
 };
 
-export default HealthBar;
+export default HealthBar; // Export the HealthBar component as the default export

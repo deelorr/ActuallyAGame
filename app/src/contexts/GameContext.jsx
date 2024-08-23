@@ -7,18 +7,20 @@ const GameContext = createContext();
 
 const GameProvider = ({ children }) => {
   
+  // Example tile layout for determining tile types based on position
   const tiles = [
     ['grass-d', 'grass-l', 'dirt-l'],
     ['water', 'sand', 'dirt-d'],
   ];
 
+  // Determine the tile type based on the character's x and y position
   const determineTileType = (x, y) => {
-    const tileX = Math.floor(x / 32);
-    const tileY = Math.floor(y / 32);
-    return tiles[tileY]?.[tileX] || 'unknown';
+    const tileX = Math.floor(x / 32); // Calculate the tile's X index
+    const tileY = Math.floor(y / 32); // Calculate the tile's Y index
+    return tiles[tileY]?.[tileX] || 'unknown'; // Return the tile type or 'unknown' if out of bounds
   };
 
-  const initialState = 'idle';
+  const initialState = 'idle'; // Initial state for state machines
 
   const transitions = {
     idle: { MOVE: 'moving', ATTACK: 'attacking' },
@@ -28,16 +30,16 @@ const GameProvider = ({ children }) => {
 
   const actions = {
     attacking: {
-      onEnter: () => console.log('Entering attacking state'),
-      onExit: () => console.log('Exiting attacking state'),
+      onEnter: () => console.log('Entering attacking state'), // Action on entering attacking state
+      onExit: () => console.log('Exiting attacking state'), // Action on exiting attacking state
     },
     idle: {
-      onEnter: () => console.log('Entering idle state'),
-      onExit: () => console.log('Exiting idle state'),
+      onEnter: () => console.log('Entering idle state'), // Action on entering idle state
+      onExit: () => console.log('Exiting idle state'), // Action on exiting idle state
     },
     moving: {
-      onEnter: () => console.log('Entering moving state'),
-      onExit: () => console.log('Exiting moving state'),
+      onEnter: () => console.log('Entering moving state'), // Action on entering moving state
+      onExit: () => console.log('Exiting moving state'), // Action on exiting moving state
     },
   };
 
@@ -74,13 +76,16 @@ const GameProvider = ({ children }) => {
   const [enemyIdleFrame, setEnemyIdleFrame] = useState(0);
   const [enemyState, setEnemyState] = useState(enemyStateMachine.getState());
 
+  // Track the current tile type the player is on
   const [tileType, setTileType] = useState("grass");
 
+  // Function to update the tile type based on the character's position
   const updateTileType = (type) => {
     setTileType(type);
   };
 
   useEffect(() => {
+    // Determine the current tile type whenever the player's position changes
     const currentTileType = determineTileType(position.x, position.y);
     setTileType(currentTileType);
   }, [position]);
@@ -138,14 +143,14 @@ const GameProvider = ({ children }) => {
 
   return (
     <GameContext.Provider value={value}>
-      {children}
+      {children} {/* Render children components with access to the game context */}
     </GameContext.Provider>
   );
 };
 
 GameProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired, // Validate that children is provided and is a React node
 };
 
 export { GameProvider };
-export default GameContext;
+export default GameContext; // Export GameContext and GameProvider for use in the application

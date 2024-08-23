@@ -16,6 +16,7 @@ const GameMap = () => {
 
   // Define the base map layout with different types of tiles
   const mapLayout = [
+    // Each element represents a tile type for a specific location on the map grid
     ['grass-d', 'grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
     ['grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
     ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
@@ -57,9 +58,9 @@ const GameMap = () => {
 
   // Function to check if the character is on the current tile
   const isCharacterOnTile = (rowIndex, colIndex) => {
-    const tileX = colIndex * 32;
-    const tileY = rowIndex * 32;
-    return position.x === tileX && position.y === tileY;
+    const tileX = colIndex * 32; // Calculate the X position of the tile
+    const tileY = rowIndex * 32; // Calculate the Y position of the tile
+    return position.x === tileX && position.y === tileY; // Check if the character's position matches the tile's position
   };
 
   return (
@@ -107,4 +108,4 @@ const GameMap = () => {
   );
 };
 
-export default GameMap;
+export default GameMap; // Export the GameMap component as the default export
