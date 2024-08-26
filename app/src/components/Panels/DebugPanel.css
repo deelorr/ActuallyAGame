@@ -18,6 +18,8 @@
 }
 
 .debug-item {
+  display: flex;
+  flex-direction: column;
   background-color: #2a2a3e;
   margin: 5px 0;
   border: 1px solid #3c3c4e;
@@ -27,6 +29,7 @@
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s, background-color 0.2s;
+
 }
 
 .debug-item:hover {
@@ -42,7 +45,6 @@
 .debug-panel span {
   font-weight: bold;
   font-size: 16px;
-  margin-bottom: 10px;
   text-transform: uppercase;
   color: #76c7c0;
 }

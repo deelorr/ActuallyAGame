@@ -6,6 +6,8 @@ const tileSize = 32;
 const mapHeight = tileSize * 10; // 10 tiles high
 const mapWidth = tileSize * 10;  // 10 tiles wide
 const MOVE_DELAY = 80;           // Delay between move steps in milliseconds
+const ATTACK_FRAME_COUNT = 10;
+const ATTACK_FRAME_DURATION = 500; // in milliseconds
 
 // Custom hook to manage character movement based on keyboard input
 const useCharacterMovement = () => {
@@ -21,42 +23,64 @@ const useCharacterMovement = () => {
 
   // Callback function to handle keydown events for character movement and actions
   const handleKeyDown = useCallback((event) => {
+
+    console.log('Key pressed:', event.key);
+    console.log('Current State:', playerStateMachine.getState());
  
     let newDirection = direction;  // Initialize the new direction
     let newPos = { ...position };  // Initialize the new position based on the current position
 
     switch (event.key) {
       case 'ArrowUp':
+        playerStateMachine.transition('MOVE');             // Transition to the move state
         newDirection = 'up';                               // Set direction to 'up'
         newPos.y = Math.max(position.y - tileSize, 0);     // Move up, but not past the top edge
+        setDirection(newDirection);                         // Update the character's direction
+        setPosition(newPos);                                // Update the character's position
         break;
       case 'ArrowDown':
-        newDirection = 'down';                             // Set direction to 'down'
+        playerStateMachine.transition('MOVE');                 // Transition to the move state
+        newDirection = 'down';                                 // Set direction to 'down'
         newPos.y = Math.min(mapHeight - tileSize, position.y + tileSize); // Move down, but not past the bottom edge
+        setDirection(newDirection);                            // Update the character's direction
+        setPosition(newPos);                                   // Update the character's position
         break;
       case 'ArrowLeft':
-        newDirection = 'left';                             // Set direction to 'left'
-        newPos.x = Math.max(position.x - tileSize, 0);     // Move left, but not past the left edge
+        playerStateMachine.transition('MOVE');                 // Transition to the move state
+        newDirection = 'left';                                 // Set direction to 'left'
+        newPos.x = Math.max(position.x - tileSize, 0);         // Move left, but not past the left edge
+        setDirection(newDirection);                            // Update the character's direction
+        setPosition(newPos);                                   // Update the character's position
         break;
       case 'ArrowRight':
-        newDirection = 'right';                            // Set direction to 'right'
+        playerStateMachine.transition('MOVE');                 // Transition to the move state
+        newDirection = 'right';                                // Set direction to 'right'
         newPos.x = Math.min(mapWidth - tileSize, position.x + tileSize); // Move right, but not past the right edge
+        setDirection(newDirection);                            // Update the character's direction
+        setPosition(newPos);                                   // Update the character's position
         break;
-      case ' ':
-        playerStateMachine.transition('ATTACK');           // Transition to the attack state
-        playerStateMachine.transition('STOP_ATTACK');      // Immediately stop the attack state (placeholder behavior)
-        return;
+      case ' ': 
+        playerStateMachine.transition('ATTACK');               // Transition to the attack state
+        setTimeout(() => {
+          playerStateMachine.transition('STOP_ATTACK');        // Stop the attack state after a delay
+        }, ATTACK_FRAME_DURATION * ATTACK_FRAME_COUNT);        // Assuming ATTACK_FRAME_DURATION and ATTACK_FRAME_COUNT are defined
+        break;
       default:
-        return; // If any other key is pressed, do nothing
+        playerStateMachine.transition('MOVE');             // Transition to the move state
+        setTimeout(() => {
+          playerStateMachine.transition('STOP');           // Stop the move state after a delay
+        }, MOVE_DELAY);
+        return;
     }
+    
+    // Update the character's position
+    console.log('State after MOVE:', playerStateMachine.getState());
 
-    setDirection(newDirection);                            // Update the character's direction
-    setPosition(newPos);                                   // Update the character's position
-    playerStateMachine.transition('MOVE');                 // Transition to the move state
 
     // After a delay, transition to the stop state (end of movement)
     setTimeout(() => {
       playerStateMachine.transition('STOP');
+      console.log('State after STOP:', playerStateMachine.getState());
     }, MOVE_DELAY);
   }, [direction, position, playerStateMachine, setPosition, setDirection]);
 

@@ -23,9 +23,9 @@ const Tile = ({ type, updateTileType }) => {
   };
 
   // Update the tile type in context when this tile is rendered
-  useEffect(() => {
-    updateTileType(type);
-  }, [type, updateTileType]);
+  // useEffect(() => {
+  //   updateTileType(type);
+  // }, [type, updateTileType]);
 
   return (
     <div 

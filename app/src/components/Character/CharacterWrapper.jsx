@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
+import GameContext from '../../contexts/GameContext';
+import { useContext } from 'react';
 
 // The CharacterWrapper component handles the positioning of the character in the game world.
-const CharacterWrapper = ({ position, children }) => {
+const CharacterWrapper = ({ children }) => {
+
+  const { position } = useContext(GameContext); // Extract the position from the GameContext
+  
   // Adjust the character's position to ensure it is centered correctly on the screen
   const centeredX = position.x - 24; // Center the character horizontally (24 pixels adjustment)
   const centeredY = position.y - 7;  // Center the character vertically (7 pixels adjustment)
@@ -22,12 +27,9 @@ const CharacterWrapper = ({ position, children }) => {
 };
 
 // Define prop types for the CharacterWrapper component to ensure correct usage
+
 CharacterWrapper.propTypes = {
-  position: PropTypes.shape({
-    x: PropTypes.number.isRequired, // x coordinate is a required number
-    y: PropTypes.number.isRequired, // y coordinate is a required number
-  }).isRequired,
-  children: PropTypes.node.isRequired, // children is required and must be a valid React node
+  children: PropTypes.node.isRequired, // Children must be a valid React node
 };
 
 export default CharacterWrapper; // Export the CharacterWrapper component as the default export

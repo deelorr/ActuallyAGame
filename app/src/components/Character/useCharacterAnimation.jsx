@@ -55,14 +55,27 @@ const useCharacterAnimation = () => {
 
   // useEffect to monitor changes in the player's state and trigger the appropriate animation
   useEffect(() => {
-    if (playerState === 'attacking') {
-      handleAttack(); // Start the attack animation
-    } else if (playerState === 'moving') {
-      handleMove(); // Start the moving animation
-    } else {
-      handleIdle(); // Start the idle animation
+    // Clear any existing intervals before starting a new one
+    clearInterval(attackIntervalRef.current);
+    clearInterval(idleIntervalRef.current);
+    clearInterval(moveIntervalRef.current);
+  
+    // Determine which animation to start based on the player's state
+    if (playerStateMachine.getState() === 'attacking') {
+      handleAttack();
+    } else if (playerStateMachine.getState() === 'moving') {
+      handleMove();
+    } else if (playerStateMachine.getState() === 'idle') {
+      handleIdle();
     }
-  }, [playerState]); // Dependencies array to re-run effect when playerState changes
-}
+  
+    // Cleanup function to clear intervals when the component unmounts or when the state changes
+    return () => {
+      clearInterval(attackIntervalRef.current);
+      clearInterval(idleIntervalRef.current);
+      clearInterval(moveIntervalRef.current);
+    };
+  }, [playerStateMachine.getState()]); // Monitor the state from the state machine
+};
 
-export default useCharacterAnimation; // Export the custom hook as the default export
+export default useCharacterAnimation;

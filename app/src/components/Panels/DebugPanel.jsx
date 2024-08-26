@@ -25,7 +25,7 @@ const DebugPanel = () => {
   } = useContext(GameContext);
 
   // Local state to manage whether debug mode is active
-  const [debugMode, setDebugMode] = useState(false);
+  const [debugMode, setDebugMode] = useState(true);
 
   // Function to toggle the debug mode on and off
   const toggleDebugMode = () => {
@@ -79,18 +79,12 @@ const DebugPanel = () => {
     <div className="debug-panel">
       <span>DEBUG MENU</span> {/* Label indicating debug mode */}
       <div className="debug-item">
-        Position: X-{position.x}, Y-{position.y} {/* Display the character's X and Y position */}
+        <span>Position: X-{position.x}, Y-{position.y}</span> {/* Display the character's X and Y position */}
+        <span>Direction: {direction} </span> {/* Display the character's current health */}
+        <span>State: {playerStateMachine.getState()}</span>
       </div>
       <div className="debug-item">
         Enemy Position: X-{enemyPosition.x}, Y-{enemyPosition.y} {/* Display the enemy's X and Y position */}
-      </div>
-      <div className="debug-item">
-        Direction: {direction} {/* Display the character's current direction */}
-      </div>
-      <div className="debug-item">
-        State: {playerStateMachine.getState()} {/* Display the current state of the character */}
-      </div>
-      <div className='debug-item'>
         Enemy State: {enemyStateMachine.getState()} {/* Display the current state of the enemy */}
       </div>
       <div className="debug-item">

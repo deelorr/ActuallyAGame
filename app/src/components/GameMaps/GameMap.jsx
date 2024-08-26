@@ -1,47 +1,20 @@
 import { useContext } from 'react';
-import GameContext from '../contexts/GameContext';
-import Tile from './Tiles/Tile'; // Import Tile component for rendering the map tiles
-import OverlayTile from './Tiles/OverlayTile'; // Import OverlayTile component for rendering overlay items
-import Character from './Character/Character'; // Import Character component for rendering the player character
-import Enemy from '../components/Enemy/Enemy'; // Import Enemy component for rendering the enemy
-import useCharacterMovement from './Character/useCharacterMovement'; // Import useCharacterMovement hook for player movement
-import useEnemyMovement from './Enemy/useEnemyMovement'; // Import useEnemyMovement hook for enemy movement
+import GameContext from '../../contexts/GameContext';
+import Tile from '../Tiles/Tile'; // Import Tile component for rendering the map tiles
+import OverlayTile from '../Tiles/OverlayTile'; // Import OverlayTile component for rendering overlay items
+import Character from '../Character/Character'; // Import Character component for rendering the player character
+import Enemy from '../Enemy/Enemy'; // Import Enemy component for rendering the enemy
+import useCharacterMovement from '../Character/useCharacterMovement'; // Import useCharacterMovement hook for player movement
+import useEnemyMovement from '../Enemy/useEnemyMovement'; // Import useEnemyMovement hook for enemy movement
 import './GameMap.css'; // Import CSS file for styling the game map
 
 const GameMap = () => {
   const { 
     position, 
-    updateTileType 
+    updateTileType,
+    mapLayout,
+    overlayLayout,
   } = useContext(GameContext); // Access position and updateTileType from GameContext
-
-  // Define the base map layout with different types of tiles
-  const mapLayout = [
-    // Each element represents a tile type for a specific location on the map grid
-    ['grass-d', 'grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
-    ['grass-d', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
-    ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
-    ['grass-l', 'grass-l', 'grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'grass-l', 'grass-l', 'grass-l', 'grass-l'],
-    ['grass-l', 'grass-l', 'dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'water', 'water'],
-    ['dirt-l', 'dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'water', 'water'],
-    ['dirt-l', 'dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'sand', 'water', 'water'],
-    ['dirt-l', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'sand', 'water', 'water', 'water'],
-    ['dirt-d', 'dirt-d', 'dirt-l', 'sand', 'sand', 'sand', 'sand', 'water', 'water', 'water'],
-    ['dirt-d', 'dirt-d', 'dirt-d', 'dirt-l', 'sand', 'sand', 'water', 'water', 'water', 'water'],
-  ];
-
-  // Define the overlay layout with items such as bushes, trees, and buildings
-  const overlayLayout = [
-    [null, null, null, 'bush', 'tree', 'tree', null, null, null, null],
-    [null, null, null, 'bush', 'bush', 'bush', null, null, 'store', null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-  ];
 
   // Define the style for the game map, setting up a grid layout
   const gameMapStyle = {

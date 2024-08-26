@@ -1,51 +1,17 @@
 import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import createUnifiedStateMachine from "../components/createUnifiedStateMachine";
+import { createPlayerStateMachine, createEnemyStateMachine } from "./stateMachines";
+import mapLayout from "../components/GameMaps/mapLayout";
+import overlayLayout from "../components/GameMaps/overlayLayout";
 
 // Create a context for the game state
 const GameContext = createContext();
 
 const GameProvider = ({ children }) => {
-  
-  // Example tile layout for determining tile types based on position
-  const tiles = [
-    ['grass-d', 'grass-l', 'dirt-l'],
-    ['water', 'sand', 'dirt-d'],
-  ];
 
-  // Determine the tile type based on the character's x and y position
-  const determineTileType = (x, y) => {
-    const tileX = Math.floor(x / 32); // Calculate the tile's X index
-    const tileY = Math.floor(y / 32); // Calculate the tile's Y index
-    return tiles[tileY]?.[tileX] || 'unknown'; // Return the tile type or 'unknown' if out of bounds
-  };
-
-  const initialState = 'idle'; // Initial state for state machines
-
-  const transitions = {
-    idle: { MOVE: 'moving', ATTACK: 'attacking' },
-    moving: { STOP: 'idle', ATTACK: 'attacking' },
-    attacking: { ATTACK: 'attacking', STOP_ATTACK: 'idle' },
-  };
-
-  const actions = {
-    attacking: {
-      onEnter: () => console.log('Entering attacking state'), // Action on entering attacking state
-      onExit: () => console.log('Exiting attacking state'), // Action on exiting attacking state
-    },
-    idle: {
-      onEnter: () => console.log('Entering idle state'), // Action on entering idle state
-      onExit: () => console.log('Exiting idle state'), // Action on exiting idle state
-    },
-    moving: {
-      onEnter: () => console.log('Entering moving state'), // Action on entering moving state
-      onExit: () => console.log('Exiting moving state'), // Action on exiting moving state
-    },
-  };
-
-  // Create a unified state machine for both player and enemy
-  const playerStateMachine = createUnifiedStateMachine(initialState, transitions, actions, 'player');
-  const enemyStateMachine = createUnifiedStateMachine(initialState, transitions, actions, 'enemy');
+  // Create state machines for player and enemy
+  const playerStateMachine = createPlayerStateMachine();
+  const enemyStateMachine = createEnemyStateMachine();
 
   // Player States
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -53,16 +19,14 @@ const GameProvider = ({ children }) => {
   const [attackFrame, setAttackFrame] = useState(0);
   const [idleFrame, setIdleFrame] = useState(0);
   const [health, setHealth] = useState(100);
+  const maxHealth = 100;
   const [moveFrame, setMoveFrame] = useState(0);
   const [stamina, setStamina] = useState(50);
+  const maxStamina = 50;
   const [attackPower, setAttackPower] = useState(10);
   const [defense, setDefense] = useState(5);
   const [experience, setExperience] = useState(0);
   const [level, setLevel] = useState(1);
-  const [playerState, setPlayerState] = useState(playerStateMachine.getState());
-
-  const maxHealth = 100;
-  const maxStamina = 50;
 
   // Enemy States
   const [enemyHealth, setEnemyHealth] = useState(50);
@@ -74,21 +38,29 @@ const GameProvider = ({ children }) => {
   const [enemyIsAttacking, setEnemyIsAttacking] = useState(false);
   const [enemyAttackFrame, setEnemyAttackFrame] = useState(0);
   const [enemyIdleFrame, setEnemyIdleFrame] = useState(0);
-  const [enemyState, setEnemyState] = useState(enemyStateMachine.getState());
 
-  // Track the current tile type the player is on
-  const [tileType, setTileType] = useState("grass");
+  // Tile States
+  const [tileType, setTileType] = useState("grass-d");
 
   // Function to update the tile type based on the character's position
-  const updateTileType = (type) => {
+  const updateTileType = (x, y) => {
+    const tileX = Math.floor(x / 32);
+    const tileY = Math.floor(y / 32);
+  
+    // Debugging: Log the computed indices and the resulting tile type
+    console.log(`x: ${x}, y: ${y}`);
+    console.log(`tileX: ${tileX}, tileY: ${tileY}`);
+    console.log(`Tile at [${tileY}][${tileX}]:`, mapLayout[tileY]?.[tileX]);
+  
+    const type = mapLayout[tileY]?.[tileX] || 'unknown';
     setTileType(type);
   };
 
   useEffect(() => {
-    // Determine the current tile type whenever the player's position changes
-    const currentTileType = determineTileType(position.x, position.y);
-    setTileType(currentTileType);
+    console.log('Position:', position);
+    updateTileType(position.x, position.y);
   }, [position]);
+  
 
   // Combine all state values and setters into a single object to pass through the context
   const value = {
@@ -139,6 +111,8 @@ const GameProvider = ({ children }) => {
     updateTileType,
     playerStateMachine, // Pass the current state of the player state machine
     enemyStateMachine, // Pass the current state of the enemy state machine
+    mapLayout,
+    overlayLayout,
   };
 
   return (
