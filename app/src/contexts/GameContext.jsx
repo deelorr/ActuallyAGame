@@ -23,6 +23,7 @@ const GameProvider = ({ children }) => {
   const [defense, setDefense] = useState(5);
   const [experience, setExperience] = useState(0);
   const [level, setLevel] = useState(1);
+  const [isPlayerAttacked, setIsPlayerAttacked] = useState(false);
 
   // Enemy States
   const [enemyHealth, setEnemyHealth] = useState(50);
@@ -63,6 +64,8 @@ const GameProvider = ({ children }) => {
     setIsAttacking,
     attackFrame,
     setAttackFrame,
+    isPlayerAttacked,
+    setIsPlayerAttacked,
     idleFrame,
     setIdleFrame,
     moveFrame,
