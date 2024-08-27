@@ -1,120 +1,122 @@
-import { useContext, useEffect, useState } from 'react'; // Import necessary hooks from React
-import GameContext from '../../contexts/GameContext'; // Import GameContext for accessing game state
-import './DebugPanel.css'; // Import the CSS file for styling the DebugPanel
+import { useContext, useEffect, useState } from 'react'; 
+import GameContext from '../../contexts/GameContext'; 
+import './DebugPanel.css'; 
 
 // The DebugPanel component displays debugging information and allows interaction with game state for testing purposes
 const DebugPanel = () => {
-  // Extract necessary state values from GameContext
   const { 
-    position,             // Character's current position
-    enemyPosition,        // Enemy's current position
-    direction,            // Character's current direction
-    playerStateMachine,   // State machine managing the character's state
-    enemyStateMachine,    // State machine managing the enemy's state
-    tileType,             // Current tile type the character is on
-    attackFrame,          // Current frame of the attack animation
-    idleFrame,            // Current frame of the idle animation
-    moveFrame,            // Current frame of the movement animation
-    setHealth,            // Function to update the character's health
-    experience,           // Current experience points of the character
-    setExperience,        // Function to update the character's experience
-    maxHealth,            // Maximum health the character can have
-    level,                // Current level of the character
-    setLevel,             // Function to update the character's level
-    setStamina            // Function to update the character's stamina
+    position,             
+    enemyPosition,        
+    direction,
+    isMoving,
+    isAttacking,
+    enemyDirection,       
+    tileType,             
+    enemyTileType,        
+    attackFrame,          
+    idleFrame,            
+    moveFrame,            
+    setHealth,            
+    experience,           
+    setExperience,        
+    maxHealth,            
+    level,                
+    setLevel,             
+    setStamina            
   } = useContext(GameContext);
 
-  // Local state to manage whether debug mode is active
   const [debugMode, setDebugMode] = useState(true);
 
-  // Function to toggle the debug mode on and off
   const toggleDebugMode = () => {
-    setDebugMode((prev) => !prev); // Toggle debugMode state between true and false
+    setDebugMode((prev) => !prev);
   };
 
-  // Function to simulate taking damage
   const handleTakeDamage = () => {
-    setHealth(prevHealth => Math.max(prevHealth - 10, 0)); // Subtract 10 from health, but don't go below 0
+    setHealth(prevHealth => Math.max(prevHealth - 10, 0));
   };
 
-  // Function to simulate adding health
   const handleAddHealth = () => {
-    setHealth(prevHealth => Math.min(prevHealth + 10, maxHealth)); // Add 10 to health, but don't exceed maxHealth
+    setHealth(prevHealth => Math.min(prevHealth + 10, maxHealth));
   };
 
-  // Function to simulate adding experience and potentially leveling up
   const handleAddExperience = () => {
-    const experienceForNextLevel = level * 100; // Calculate the experience needed for the next level
-    setExperience(prevExperience => prevExperience + 50); // Add 50 experience points
+    const experienceForNextLevel = level * 100;
+    setExperience(prevExperience => prevExperience + 50);
 
-    // Check if level up is necessary
     if (experience + 50 >= experienceForNextLevel) {
-      setExperience(0); // Reset experience for the next level
-      setLevel(prevLevel => prevLevel + 1); // Increase level by 1
+      setExperience(0);
+      setLevel(prevLevel => prevLevel + 1);
     }
   };
 
-  // Function to simulate stamina loss
   const handleTakeStamina = () => {
-    setStamina(prevStamina => Math.max(prevStamina - 10, 0)); // Subtract 10 from stamina, but don't go below 0
+    setStamina(prevStamina => Math.max(prevStamina - 10, 0));
   };
 
-  // Effect to handle keydown event for toggling debug mode
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'd') toggleDebugMode(); // Toggle debug mode when 'd' key is pressed
+      if (e.key === 'd') toggleDebugMode();
     };
 
-    // Add keydown event listener when the component mounts
     window.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup the event listener when the component unmounts
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+  }, []);
 
-  // Conditionally render the debug panel only when debugMode is true
   return debugMode ? (
     <div className="debug-panel">
-      <span>DEBUG MENU</span> {/* Label indicating debug mode */}
-      <div className="debug-item">
-        <span>Position: X-{position.x}, Y-{position.y}</span> {/* Display the character's X and Y position */}
-        <span>Direction: {direction} </span> {/* Display the character's current health */}
-        <span>State: {playerStateMachine.getState()}</span>
+      <span className='debug-title'>DEBUG MENU</span>
+
+      <div className="debug-player">
+        <span className='stat-title'>Player Stats</span>
+        <div className='player-grid'>
+          <span className='player-item'>Position: X-{position.x}, Y-{position.y}</span>
+          <span className='player-item'>Direction: {direction}</span>
+          <span>Moving: {isMoving ? 'Yes' : 'No'}</span>
+          <span>Attacking: {isAttacking ? 'Yes' : 'No'}</span>
+          <span className='player-item'>Tile Type: {tileType}</span>
+        </div>
       </div>
-      <div className="debug-item">
-        Enemy Position: X-{enemyPosition.x}, Y-{enemyPosition.y} {/* Display the enemy's X and Y position */}
-        Enemy State: {enemyStateMachine.getState()} {/* Display the current state of the enemy */}
+      <div className="debug-enemy">
+        <span className='stat-title'>Enemy Stats</span>
+        <div className='enemy-grid'>
+          <span className='enemy-item'>Position: X-{enemyPosition.x}, Y-{enemyPosition.y}</span>
+          <span className='enemy-item'>Direction: {enemyDirection}</span>
+          <span className='enemy-item'>Tile Type: {enemyTileType}</span>
+        </div>
       </div>
-      <div className="debug-item">
-        Tile Type: {tileType} {/* Display the current tile type */}
-      </div>
-      <div className="debug-item">
-        Attack: {attackFrame} Idle: {idleFrame} Move: {moveFrame} {/* Display the current animation frames */}
+      <div className="debug-frames">
+        <span className='stat-title'>Animation Frames</span>
+        <div className='frame-grid'>
+          <span className='frame-item'>Attack: {attackFrame}</span>
+          <span className='frame-item'>Idle: {idleFrame}</span>
+          <span className='frame-item'>Move: {moveFrame}</span>
+        </div>
       </div>
 
-      {/* New Buttons for Debugging */}
       <div className='debug-buttons'>
         <div className="debug-button">
-          <button onClick={handleTakeDamage}>Take Damage</button> {/* Button to simulate taking damage */}
+          <button onClick={handleTakeDamage}>Take Damage</button>
         </div>
         <div className="debug-button">
-          <button onClick={handleAddExperience}>Add XP</button> {/* Button to simulate gaining experience */}
+          <button onClick={handleAddExperience}>Add XP</button>
         </div>
         <div className="debug-button">
-          <button onClick={handleAddHealth}>Add Health</button> {/* Button to simulate gaining health */}
+          <button onClick={handleAddHealth}>Add Health</button>
         </div>
         <div className="debug-button">
-          <button onClick={handleTakeStamina}>Take Stamina</button> {/* Button to simulate losing stamina */}
+          <button onClick={handleTakeStamina}>Take Stamina</button>
         </div>
       </div>
+
     </div>
   ) : (
     <div className="debug-panel">
-      <span className='debug-item'>Press d for debug menu</span> {/* Display message to enable debug mode */}
+      <span className='debug-item'>Press d for debug menu</span>
     </div>
-  ); // If debugMode is false, render this message
+  );
 };
 
-export default DebugPanel; // Export the DebugPanel component as the default export
+export default DebugPanel;

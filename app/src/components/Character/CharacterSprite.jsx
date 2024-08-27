@@ -13,19 +13,19 @@ const CharacterSprite = () => {
     attackFrame,    // The current frame of the attack animation
     idleFrame,      // The current frame of the idle animation
     moveFrame,      // The current frame of the moving animation
-    playerStateMachine // The state machine managing the character's state (idle, moving, attacking)
+    isAttacking,
+    isMoving,
   } = useContext(GameContext);
 
-  // A function to determine the appropriate style for the sprite based on the character's state
+  // Determine the sprite strip and current frame based on the character's state
   const getSpriteStyle = () => {
     let spriteStrip;  // The sprite sheet to be used based on the current state
     let currentFrame; // The current frame of animation based on the current state
 
-    // Determine the sprite strip and current frame based on the character's state
-    if (playerStateMachine.getState() === 'attacking') {
+    if (isAttacking) {
       spriteStrip = `/src/assets/character-attack.png`;  // Use attack sprite sheet
       currentFrame = attackFrame;                        // Use attack animation frame
-    } else if (playerStateMachine.getState() === 'moving') {
+    } else if (isMoving) {
       spriteStrip = `/src/assets/character-walk.png`;    // Use walking sprite sheet
       currentFrame = moveFrame;                          // Use walking animation frame
     } else {
@@ -55,4 +55,4 @@ const CharacterSprite = () => {
   return <div style={getSpriteStyle()} className='player-sprite' />;
 };
 
-export default CharacterSprite; // Export the CharacterSprite component as the default export
+export default CharacterSprite;

@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { createPlayerStateMachine, createEnemyStateMachine } from "./stateMachines";
 import mapLayout from "../components/GameMaps/mapLayout";
 import overlayLayout from "../components/GameMaps/overlayLayout";
 
@@ -8,14 +7,11 @@ import overlayLayout from "../components/GameMaps/overlayLayout";
 const GameContext = createContext();
 
 const GameProvider = ({ children }) => {
-
-  // Create state machines for player and enemy
-  const playerStateMachine = createPlayerStateMachine();
-  const enemyStateMachine = createEnemyStateMachine();
-
   // Player States
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState("down");
+  const [isMoving, setIsMoving] = useState(false);
+  const [isAttacking, setIsAttacking ] = useState(false);
   const [attackFrame, setAttackFrame] = useState(0);
   const [idleFrame, setIdleFrame] = useState(0);
   const [health, setHealth] = useState(100);
@@ -36,6 +32,7 @@ const GameProvider = ({ children }) => {
   const [enemyDirection, setEnemyDirection] = useState("left");
   const [enemyIsMoving, setEnemyIsMoving] = useState(false);
   const [enemyIsAttacking, setEnemyIsAttacking] = useState(false);
+  const [enemyMoveFrame, setEnemyMoveFrame] = useState(0);
   const [enemyAttackFrame, setEnemyAttackFrame] = useState(0);
   const [enemyIdleFrame, setEnemyIdleFrame] = useState(0);
 
@@ -45,22 +42,14 @@ const GameProvider = ({ children }) => {
   // Function to update the tile type based on the character's position
   const updateTileType = (x, y) => {
     const tileX = Math.floor(x / 32);
-    const tileY = Math.floor(y / 32);
-  
-    // Debugging: Log the computed indices and the resulting tile type
-    console.log(`x: ${x}, y: ${y}`);
-    console.log(`tileX: ${tileX}, tileY: ${tileY}`);
-    console.log(`Tile at [${tileY}][${tileX}]:`, mapLayout[tileY]?.[tileX]);
-  
+    const tileY = Math.floor(y / 32);  
     const type = mapLayout[tileY]?.[tileX] || 'unknown';
     setTileType(type);
   };
 
   useEffect(() => {
-    console.log('Position:', position);
     updateTileType(position.x, position.y);
   }, [position]);
-  
 
   // Combine all state values and setters into a single object to pass through the context
   const value = {
@@ -68,6 +57,10 @@ const GameProvider = ({ children }) => {
     setPosition,
     direction,
     setDirection,
+    isMoving,
+    setIsMoving,
+    isAttacking,
+    setIsAttacking,
     attackFrame,
     setAttackFrame,
     idleFrame,
@@ -106,11 +99,11 @@ const GameProvider = ({ children }) => {
     setEnemyAttackFrame,
     enemyIdleFrame,
     setEnemyIdleFrame,
+    enemyMoveFrame,
+    setEnemyMoveFrame,
     tileType,
     setTileType,
     updateTileType,
-    playerStateMachine, // Pass the current state of the player state machine
-    enemyStateMachine, // Pass the current state of the enemy state machine
     mapLayout,
     overlayLayout,
   };
@@ -127,4 +120,4 @@ GameProvider.propTypes = {
 };
 
 export { GameProvider };
-export default GameContext; // Export GameContext and GameProvider for use in the application
+export default GameContext;

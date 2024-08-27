@@ -17,8 +17,8 @@ const useCharacterAnimation = () => {
     setAttackFrame,    // Function to update the attack frame
     setIdleFrame,      // Function to update the idle frame
     setMoveFrame,      // Function to update the move frame
-    playerStateMachine, // The state machine managing the character's state (not used in this code snippet)
-    playerState,       // The current state of the player (attacking, moving, idle)
+    isAttacking,
+    isMoving,
   } = useContext(GameContext);
 
   // Refs to store interval IDs, allowing us to clear them when needed
@@ -55,27 +55,24 @@ const useCharacterAnimation = () => {
 
   // useEffect to monitor changes in the player's state and trigger the appropriate animation
   useEffect(() => {
-    // Clear any existing intervals before starting a new one
     clearInterval(attackIntervalRef.current);
     clearInterval(idleIntervalRef.current);
     clearInterval(moveIntervalRef.current);
-  
-    // Determine which animation to start based on the player's state
-    if (playerStateMachine.getState() === 'attacking') {
+
+    if (isAttacking) {
       handleAttack();
-    } else if (playerStateMachine.getState() === 'moving') {
+    } else if (isMoving) {
       handleMove();
-    } else if (playerStateMachine.getState() === 'idle') {
+    } else {
       handleIdle();
     }
-  
-    // Cleanup function to clear intervals when the component unmounts or when the state changes
+
     return () => {
       clearInterval(attackIntervalRef.current);
       clearInterval(idleIntervalRef.current);
       clearInterval(moveIntervalRef.current);
     };
-  }, [playerStateMachine.getState()]); // Monitor the state from the state machine
+  }, [isAttacking, isMoving]); // Monitor `isAttacking` and `isMoving` directly
 };
 
 export default useCharacterAnimation;
