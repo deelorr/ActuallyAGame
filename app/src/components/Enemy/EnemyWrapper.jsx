@@ -1,34 +1,33 @@
 import PropTypes from 'prop-types';
+import GameContext from '../../contexts/GameContext';
+import { useContext } from 'react';
 
 // The EnemyWrapper component handles the positioning of the enemy in the game world.
-const EnemyWrapper = ({ position, children }) => {
-
-  // Calculate the centered position of the enemy sprite within its container
-  const centeredX = position.x - 21; // Adjust the X position to center the sprite horizontally
-  const centeredY = position.y - 7;  // Adjust the Y position to center the sprite vertically
+const EnemyWrapper = ({ children }) => {
+  const { enemyPosition } = useContext(GameContext); // Extract the enemy's position from the GameContext
+  
+  // Adjust the enemy's position to ensure it is centered correctly on the screen
+  const centeredX = enemyPosition.x - 21; // Adjust the X position to center the sprite horizontally
+  const centeredY = enemyPosition.y - 7;  // Adjust the Y position to center the sprite vertically
 
   return (
     <div
       style={{
-        position: 'absolute',  // Position the enemy absolutely within the parent container
-        top: `${centeredY}px`,  // Set the top position based on the calculated centered Y value
-        left: `${centeredX}px`, // Set the left position based on the calculated centered X value
-        transition: 'top 0.2s ease, left 0.2s ease', // Smooth transition for movement to avoid abrupt changes
-        border: '1px solid red', // Add a red border around the enemy wrapper (useful for debugging)
+        position: 'absolute', // Position the enemy absolutely within the parent container
+        top: `${centeredY}px`, // Position the enemy based on the calculated Y value
+        left: `${centeredX}px`, // Position the enemy based on the calculated X value
+        transition: 'top 0.2s ease, left 0.2s ease', // Smooth transition for movement
+        border: '1px solid red', // Red border around the enemy wrapper (for debugging purposes)
       }}
     >
-      {children} {/* Render any child components inside the wrapper, typically the EnemySprite */}
+      {children} {/* Render any child components inside the wrapper, such as the EnemySprite */}
     </div>
   );
 };
 
 // Define prop types for the EnemyWrapper component to ensure correct usage
 EnemyWrapper.propTypes = {
-  position: PropTypes.shape({
-    x: PropTypes.number.isRequired, // x-coordinate of the enemy's position (required and must be a number)
-    y: PropTypes.number.isRequired, // y-coordinate of the enemy's position (required and must be a number)
-  }).isRequired,
-  children: PropTypes.node.isRequired, // The children to be rendered inside the wrapper (required and must be a valid React node)
+  children: PropTypes.node.isRequired, // Children must be a valid React node
 };
 
 export default EnemyWrapper; // Export the EnemyWrapper component as the default export

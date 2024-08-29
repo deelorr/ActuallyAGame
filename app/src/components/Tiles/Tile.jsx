@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'; // Import PropTypes for type-checking
-import { useEffect } from 'react';
+import './Tile.css'; // Import the CSS file for the Tile component
 
-const Tile = ({ type, updateTileType }) => {
+const Tile = ({ type }) => {
+  
   // Function to determine the CSS styles based on the tile type
   const getTileStyle = () => {
     switch (type) {
@@ -45,7 +46,7 @@ const Tile = ({ type, updateTileType }) => {
 // Define the expected prop types for the Tile component
 Tile.propTypes = {
   type: PropTypes.string.isRequired, // The type of tile (required)
-  updateTileType: PropTypes.func.isRequired, // Function to update the tile type in context (required)
+  updateTileType: PropTypes.func, // Function to update the tile type in context (required)
 };
 
 export default Tile;

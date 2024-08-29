@@ -6,19 +6,20 @@ const MOVE_DELAY = 1000;
 
 const useEnemyMovement = () => {
   const { 
-    position, 
-    enemyPosition, 
-    setEnemyPosition, 
-    setEnemyIsMoving, 
-    setEnemyIsAttacking,
-    setEnemyIdle,
-    isPlayerAttacked, 
-    setIsPlayerAttacked
+    position,             
+    enemyPosition,        
+    setEnemyPosition,     
+    enemyDirection,       
+    setEnemyDirection,    
+    enemyIsMoving,        
+    setEnemyIsMoving,     
+    enemyIsAttacking,     
+    setEnemyIsAttacking   
   } = useContext(GameContext);
 
   const moveEnemyTowardPlayer = useCallback(() => {
-    let newEnemyX = enemyPosition.x;
-    let newEnemyY = enemyPosition.y;
+    let newDirection = enemyDirection;
+    let newEnemyPos = { ...enemyPosition };
     const { x: playerX, y: playerY } = position;
     const { x: enemyX, y: enemyY } = enemyPosition;
 
@@ -29,16 +30,19 @@ const useEnemyMovement = () => {
 
     // Prioritize horizontal movement
     if (Math.abs(deltaX) > TILE_SIZE) {
+      newDirection = deltaX > 0 ? 'right' : 'left';
+      newEnemyPos.x += deltaX > 0 ? TILE_SIZE : -TILE_SIZE;
       isMoving = true;
-      newEnemyX += deltaX > 0 ? TILE_SIZE : -TILE_SIZE;
     } 
     // Vertical movement if horizontally aligned
     else if (Math.abs(deltaY) > 0) {
+      newDirection = deltaY > 0 ? 'down' : 'up';
+      newEnemyPos.y += deltaY > 0 ? TILE_SIZE : -TILE_SIZE;
       isMoving = true;
-      newEnemyY += deltaY > 0 ? TILE_SIZE : -TILE_SIZE;
     }
 
-    setEnemyPosition({ x: newEnemyX, y: newEnemyY });
+    setEnemyDirection(newDirection);
+    setEnemyPosition(newEnemyPos);
 
     if (isMoving) {
       setEnemyIsMoving(true);
@@ -48,13 +52,10 @@ const useEnemyMovement = () => {
       // Check if enemy is next to the player (adjacent)
       if (Math.abs(deltaX) <= TILE_SIZE && Math.abs(deltaY) <= TILE_SIZE) {
         setEnemyIsAttacking(true);  // Trigger the attack animation
-        setIsPlayerAttacked(true);  // Indicate the player is being attacked
-      } else {
-        setEnemyIdle(true);
+        setTimeout(() => setEnemyIsAttacking(false), 500); // Example duration
       }
     }
-
-  }, [enemyPosition, position, setEnemyPosition, setEnemyIsMoving, setEnemyIsAttacking, setEnemyIdle, setIsPlayerAttacked]);
+  }, [enemyDirection, enemyPosition, position, setEnemyDirection, setEnemyPosition, setEnemyIsMoving, setEnemyIsAttacking]);
 
   useEffect(() => {
     const interval = setInterval(() => {

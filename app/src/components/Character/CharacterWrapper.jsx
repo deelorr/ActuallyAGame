@@ -19,6 +19,8 @@ const CharacterWrapper = ({ children }) => {
         left: `${centeredX}px`, // Position the character based on the calculated X value
         transition: 'top 0.2s ease, left 0.2s ease', // Smooth transition for movement
         border: '1px solid red', // Red border around the character wrapper (for debugging purposes)
+        zIndex: 2, // Ensure the character is above the tile grid
+        pointerEvents: 'none', // Disable pointer events on the wrapper to allow clicks to pass through
       }}
     >
       {children} {/* Render any child components inside the wrapper, such as the CharacterSprite */}

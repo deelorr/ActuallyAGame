@@ -1,7 +1,7 @@
-import CharacterWrapper from './CharacterWrapper';
-import CharacterSprite from './CharacterSprite';
-import useCharacterAnimation from './useCharacterAnimation';
-import useCharacterMovement from './useCharacterMovement';
+import CharacterWrapper from '../Character/CharacterWrapper';
+import CharacterSprite from '../Character/CharacterSprite';
+import useCharacterAnimation from '../Character/useCharacterAnimation';
+import useCharacterMovement from '../Character/useCharacterMovement';
 
 // The main Character component which manages the player's character
 const Character = () => {

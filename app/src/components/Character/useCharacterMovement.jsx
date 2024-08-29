@@ -14,8 +14,20 @@ const useCharacterMovement = () => {
     isMoving,             
     setIsMoving,          
     isAttacking,          
-    setIsAttacking        
+    setIsAttacking,
+    hoveredTile,
+    setHoveredTile,        
   } = useContext(GameContext);
+
+  // Function to move to the tile that is clicked (not hovered)
+  const moveToClickedTile = useCallback(() => {
+    if (hoveredTile) {
+      setIsMoving(true);
+      setPosition(hoveredTile);
+      setHoveredTile(null);
+      setTimeout(() => setIsMoving(false), 100); // Stop moving after reaching the tile
+    }
+  }, [hoveredTile, setIsMoving, setPosition, setHoveredTile]);
 
   const handleKeyDown = useCallback((event) => {
     let newDirection = direction;
@@ -25,33 +37,30 @@ const useCharacterMovement = () => {
       case 'ArrowUp':
         newDirection = 'up';
         newPos.y = Math.max(position.y - tileSize, 0);
-        setIsMoving(true);
         break;
       case 'ArrowDown':
         newDirection = 'down';
         newPos.y = Math.min(mapHeight - tileSize, position.y + tileSize);
-        setIsMoving(true);
         break;
       case 'ArrowLeft':
         newDirection = 'left';
         newPos.x = Math.max(position.x - tileSize, 0);
-        setIsMoving(true);
         break;
       case 'ArrowRight':
         newDirection = 'right';
         newPos.x = Math.min(mapWidth - tileSize, position.x + tileSize);
-        setIsMoving(true);
         break;
       case ' ':
         setIsAttacking(true);
         setTimeout(() => setIsAttacking(false), 500); // Example duration
-        break;
+        return; // Return early since there's no need to move
       default:
-        break;
+        return;
     }
 
     setDirection(newDirection);
     setPosition(newPos);
+    setIsMoving(true);
 
     setTimeout(() => setIsMoving(false), 100); // Example stop after moving
   }, [direction, position, setPosition, setDirection, setIsMoving, setIsAttacking]);
@@ -64,7 +73,8 @@ const useCharacterMovement = () => {
     };
   }, [handleKeyDown]);
 
-  return { position, direction, isMoving, isAttacking };
+  // Return the movement function to be triggered manually on click
+  return { position, direction, isMoving, isAttacking, moveToClickedTile };
 };
 
 export default useCharacterMovement;

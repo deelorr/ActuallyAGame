@@ -48,6 +48,9 @@ const CharacterSprite = () => {
       transformOrigin: 'top left',                       // Set the origin for the transform
       imageRendering: 'pixelated',                       // Ensure the sprite is rendered with pixelated edges
       border: '1px solid blue',                          // Add a blue border around the character sprite (for debugging purposes)
+      position: 'relative',                             // Set the position to relative to allow for z-index manipulation
+      zIndex: 3,                                         // Set the z-index to ensure the character is above the wrapper
+      pointerEvents: 'none',                           // Disable pointer events on the sprite to allow clicks to pass through
     };
   };
 
